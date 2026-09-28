@@ -1,0 +1,39 @@
+---
+draft: false
+slug: shelfready-ep03-audit
+project: shelfready
+episode: 3
+title: "My audit said 89% of the store was ready. That was the bug."
+date: 2026-09-27
+summary: "The first full audit ranked products correctly but called almost the whole store agent-ready, so I changed how the bands work before trusting the baseline."
+pmTakeaway: "A score can rank things correctly and still mislead. Check the headline number against the question it's supposed to answer."
+buildTakeaway: "Make the model quote its evidence, and check the quote in code. It fixed a lenient judge and gave every finding a source."
+metric: "Baseline store score 94.1/100: 78% agent-ready, 11 products not ready"
+commit: "https://github.com/OluTechTalk/shelfready/commit/0817bd8ef25e281070dad6014916efd0e5e6c07c"
+---
+
+**The goal.** Score every product from 0 to 100 on one question: *could an AI shopping agent confidently match it?* Then show the store score, the band split and the worst offenders on an `/audit` page. The test: messy products should score clearly below clean ones, measured against the ground truth from Episode 02.
+
+**The product call.** The first full audit looked like success. It ranked products correctly, with clean ones averaging 100 and messy ones 82. But it put 89% of the store in the Agent-ready band and 0% in Not ready, including products whose descriptions were pure marketing with no specs at all.
+
+The problem was the weighted sum: strong checks could hide one fatal gap. I had four options: keep the cutoffs, raise them, regenerate a messier catalog, or add a gate. I chose the gate. Any check below 0.5 caps a product at Partial, and two or more make it Not ready. The gate encodes the rubric's actual question directly. Raising the cutoffs gave a similar split, but with thresholds picked after seeing the data, which is the kind of number I don't want to defend later.
+
+I made two cost calls as well. The first was one model call per product covering all the language judgments, instead of three. That's 150 calls per audit instead of about 450, which fits the free tier. The second was half credit for specs that appear only in the description. An agent can read prose, but it matches on it less reliably than on structured fields, and that split is exactly what the fixer will act on next.
+
+**What I built.**
+- Rubric v1 with seven checks, each returning a score and plain-language findings
+- Category detection from the product's own data. It never uses the fixture labels, and it got 150 of 150 right.
+- A self-test proving each seeded defect lowers exactly the check it targets: 0 mismatches
+- A model wrapper that logs tokens and latency for every call, failures included
+- A per-product model judgment, cached by content hash, where every claim must quote the source text and quotes that don't exist are rejected
+- The `/audit` page: store score, band bar, check averages and the 10 worst offenders
+
+**What broke.** The fast model kept returning "high demand" errors and 17–70 second calls, so I switched to the lite version. My first unpaced run hit the free tier's per-minute limit after about 100 calls, left 45 products unscored, and saved the partial run anyway. Now calls start at least 4 seconds apart, quota errors back off for 30 seconds, and a partial run is never saved.
+
+The title judge was also too lenient. It said "Cozy Layer!!!" named a product type. Making it quote the exact title words fixed it: clean titles passed 13 of 13, and vague ones passed 0 of 13.
+
+An honest caveat: the clean products all score exactly 100 because the generator makes them perfect. Real catalogs won't, so I'll keep that in mind whenever I quote the "before" number.
+
+**The number.** Baseline store score **94.1 / 100**: 78% Agent-ready, 14.7% Partial, 7.3% Not ready (11 products). By defect count, products with 1 defect average 89.2, falling to 68.2 at 4 defects. Model usage: 275 calls logged, of which 179 succeeded and 96 failed on quota with 0 tokens. The cost was $0 on the free tier.
+
+**Next.** Episode 04: propose fixes for the failing checks, put a human in the loop to approve them, write them back to Shopify, and re-audit.

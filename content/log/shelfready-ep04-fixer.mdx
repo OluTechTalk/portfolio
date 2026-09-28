@@ -1,0 +1,44 @@
+---
+draft: false
+slug: shelfready-ep04-fixer
+project: shelfready
+episode: 4
+title: "101 fixes, one human reviewer, and a store score from 94.1 to 98.3"
+date: 2026-09-28
+summary: "I built a fixer that proposes catalog fixes, a queue where a human approves them, and write-back to Shopify. Then I reviewed the whole queue myself and re-audited."
+pmTakeaway: "A confident wrong spec costs more than a missing one. So the fixer drops anything it can't prove and hands the gap to the merchant."
+buildTakeaway: "Shopify has no transaction across mutations, so all-or-nothing writes are a fiction. Record each change's own result."
+metric: "Store score 94.1 → 98.3; not-ready products 11 → 0"
+commit: "https://github.com/OluTechTalk/shelfready/commit/c3b1edcb4e695110e63a9ce91be4201d5cd81344"
+---
+
+**The goal.** The audit in Episode 03 said what's wrong. This episode fixes it. The fixer proposes a change for each failing check, a person approves, edits or rejects it, approved fixes are written back to Shopify, and a re-audit shows whether the score actually moved.
+
+**The product call.** The whole design rests on one belief: wrong product data is worse than missing product data. A made-up waterproof rating or weight causes returns and hurts the brand, while a gap only costs a sale. So:
+
+- **Model fixes must be grounded or they're dropped.** An extracted spec needs a verbatim quote from the product's own data. A rewritten title may only use words already in the data, and a drafted description may only use numbers already in it. Whatever the data can't support becomes a "needs merchant" item instead of a guess.
+- **Some things are never automated.** Duplicate variants go to the merchant, because deleting one moves inventory and can break orders.
+- **Anyone can see the queue, but only an admin can change it.** The demo should show the review process to visitors, but a public approve button would let anyone write to the store.
+
+**What I built.**
+- Rule-based fixes for the mechanical problems: option names, SKUs, alt text and categories borrowed from the most similar well-classified product in the store, plus a simulation proving each fix clears its defect without making any check worse
+- Model-based fixes, one call per product that needs one, all run through the grounding checks above
+- Write-back that applies only approved fixes, checks each field for conflicts, and re-syncs the product afterwards
+- A `/review` page with product-centric cards, "why it matters" notes, edit-before-approve and bulk apply
+- A before/after view on `/audit`, using the same rubric and the same model as the baseline
+
+**What broke.** Plenty, and most of it was useful.
+
+The first test apply landed 6 of 8 changes and marked all 8 failed. There's no transaction across Shopify mutations, so I switched to independent writes with a result recorded for each change.
+
+A whole-product conflict check blocked every remaining fix on a product as soon as one landed, so I made it check per field instead.
+
+The fixer also ran on a stale audit after a bulk apply and drafted 11 rewrites of descriptions that had already been fixed. They were deleted before review, and the fixer now refuses any product whose latest audit doesn't match its current content.
+
+Alt text needed a permission the app didn't have. Adding it to a new app version wasn't enough: the store only got it once the updated permissions were accepted. Released isn't the same as granted.
+
+My own live review surfaced the rest: raw category codes and raw attribute encodings showing up in the queue. I fixed each one as I hit it.
+
+**The number.** Using the same rubric and the same model, the store score went from **94.1 to 98.3**. Agent-ready went from 78% to 99.3%, and Not ready from **11 products to 0**. Messy products averaged 82.4 before and 94.9 after, and clean products stayed at 100. In the queue: 101 fixes applied (1 edited by me), 2 rejected, 15 left for the merchant, and 0 failed. It cost $0 on the free tier.
+
+**Next.** Episode 05: an MCP server so an AI agent can shop the fixed store for real.

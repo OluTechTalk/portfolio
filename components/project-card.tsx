@@ -9,7 +9,13 @@ const statusLabel: Record<Project["status"], string> = {
   planned: "Planned",
 };
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({
+  project,
+  logCount,
+}: {
+  project: Project;
+  logCount: number;
+}) {
   const planned = project.status === "planned";
   const links = [
     project.demoUrl && { label: "Demo", href: project.demoUrl },
@@ -19,8 +25,9 @@ export function ProjectCard({ project }: { project: Project }) {
 
   return (
     <article
+      id={`project-${project.slug}`}
       className={cn(
-        "flex flex-col rounded-xl border p-6",
+        "flex scroll-mt-8 flex-col rounded-xl border p-6",
         planned ? "border-dashed" : "bg-card",
       )}
     >
@@ -64,7 +71,7 @@ export function ProjectCard({ project }: { project: Project }) {
         ))}
       </ul>
 
-      {(links.length > 0 || project.caseStudy) && (
+      {(links.length > 0 || project.caseStudy || logCount > 0) && (
         <ul className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6 text-sm font-medium">
           {links.map((link) => (
             <li key={link.label}>
@@ -86,6 +93,17 @@ export function ProjectCard({ project }: { project: Project }) {
                 className="underline underline-offset-4 hover:text-brand"
               >
                 Case study
+                <span className="sr-only"> for {project.title}</span>
+              </Link>
+            </li>
+          )}
+          {logCount > 0 && (
+            <li>
+              <Link
+                href={`/log?project=${project.slug}`}
+                className="underline underline-offset-4 hover:text-brand"
+              >
+                {logCount} log {logCount === 1 ? "post" : "posts"}
                 <span className="sr-only"> for {project.title}</span>
               </Link>
             </li>

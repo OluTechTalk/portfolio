@@ -1,16 +1,23 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { ProjectCard } from "@/components/project-card";
 import { buttonVariants } from "@/components/ui/button";
-import { projects } from "@/content/projects";
+import { projectName, projects } from "@/content/projects";
 import { site } from "@/content/site";
+import { countPostsByProject, formatEpisode, getLatestPost } from "@/lib/log";
 import { cn } from "@/lib/utils";
 import headshot from "@/public/headshot.jpg";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 const buttonSize = "h-11 px-5 text-base";
 
-export default function Home() {
+export default async function Home() {
+  const [latest, logCounts] = await Promise.all([
+    getLatestPost(),
+    countPostsByProject(),
+  ]);
+
   return (
     <main className="mx-auto w-full max-w-content px-gutter">
       <section id="about" className="scroll-mt-8 pt-10 pb-12 sm:pt-16">
@@ -68,7 +75,18 @@ export default function Home() {
           />
           <span>
             <span className="font-medium text-foreground">Now building:</span>{" "}
-            ShelfReady, an agent-ready storefront. Build log coming soon.
+            {latest ? (
+              <Link
+                href={`/log/${latest.slug}`}
+                className="underline-offset-4 hover:text-brand hover:underline"
+              >
+                {projectName(latest.project)} ·{" "}
+                {formatEpisode(latest.episode)} · {latest.title}{" "}
+                <span aria-hidden>→</span>
+              </Link>
+            ) : (
+              "ShelfReady, an agent-ready storefront. Build log coming soon."
+            )}
           </span>
         </p>
       </section>
@@ -89,7 +107,11 @@ export default function Home() {
           {[...projects]
             .sort((a, b) => a.order - b.order)
             .map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+              <ProjectCard
+                key={project.slug}
+                project={project}
+                logCount={logCounts[project.slug] ?? 0}
+              />
             ))}
         </div>
       </section>

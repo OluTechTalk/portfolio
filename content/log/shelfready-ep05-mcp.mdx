@@ -1,0 +1,37 @@
+---
+draft: false
+slug: shelfready-ep05-mcp
+project: shelfready
+episode: 5
+title: "Claude shopped my store and came back with a checkout link"
+date: 2026-09-28
+summary: "I gave the store four MCP tools and connected Claude. It found the closest match to a shopper's request and returned a working checkout link, and the test surfaced a data bug the audit couldn't see."
+pmTakeaway: "Put the product in front of a real agent early. A live session found a spec error that every score had missed."
+buildTakeaway: "Grounding checks must define what counts as evidence. A URL handle isn't product text, and treating it that way let a bad spec look proven."
+metric: "7 tool calls from request to working checkout link"
+commit: "https://github.com/OluTechTalk/shelfready/commit/f9b212a51dc5d9fefc1b236afeef38ee63207e76"
+---
+
+**The goal.** Everything so far has been about making the catalog readable to agents. This episode lets one shop it. I built an MCP server with four tools: `search_products`, `get_product`, `check_availability` and `create_cart`. The test was a real request: *waterproof hiking boots, men's 10, under $150*. Done meant a working Shopify checkout link.
+
+**The product call.** Two decisions shaped this episode.
+
+**Search reads my structured copy of the catalog, while stock and carts stay live.** Shopify's storefront search is keyword-only and can't filter on attributes like waterproof, capacity or fill type, which is exactly the data the audit and fixer improved. So search runs on the synced Postgres copy, behind an interface that lets the next episode's eval swap in the original messy catalog. Availability and carts always hit Shopify live, because stale stock is worse than slow stock.
+
+**The MCP endpoint is public, with rate limits and no login.** Anyone should be able to connect an agent to the demo store. The tools are read-only except cart creation, and a cart takes no payment and no customer data, since checkout happens on Shopify. Abuse protection is a per-IP rate limit, a request size cap and a log of every call.
+
+**What I built.**
+- The four tools as plain functions: search with text plus structured filters (type, gender, size, color, price, waterproof), product details, live availability, and cart creation that returns only a checkout URL
+- An MCP endpoint on Vercel, with instructions that walk the agent through search → details → availability → cart
+- Rate limiting at 60 requests per minute per IP, with a 429 response past that, a 64 KB body limit, and every tool call logged
+- A seed step that publishes products to the Online Store channel, plus a new check on the status page
+
+**What broke.** First, the store was invisible. The products were Active but on no sales channel, so the Storefront API saw an empty shop. Active isn't the same as published, and fixing it took a second round of app permissions.
+
+Then the live test. Claude found no *boot* under $150, offered the Cascade Low Waterproof Hiking Shoe at $115.95 as the closest match, and returned a working checkout link. It also created one cart per color, so the instructions now tell it to ask for the variant first.
+
+The real find was a title in the results: "Lynx 30f Synthetic Sleeping Bag." The fixer's evidence check had accepted the product's URL handle as product text, so a bad spec was "quoted" from the URL and then made a bad title look grounded. Specs now have to match the product's own text in both number and unit, and the handle is never evidence. A new check re-audited every fix already written: 3 of 50 were wrong. They were corrected and approved, and the re-check came back with 0 issues. My first version of that check was far too strict and raised 45 false flags on things like "28L", until it learned that units can be written different ways.
+
+**The number.** It took Claude 7 tool calls to go from the request to a checkout link: 3 searches, 1 detail lookup, 1 availability check and 2 carts. Tool latency was about 270 ms for search, 180 ms for availability and 430 ms for a cart. The store score held at 98.3, because the spec corrections fixed accuracy the score can't see.
+
+**Next.** Episode 06: the eval. I'll run 40 shopping tasks through these tools on the original messy catalog and on the fixed one, with the same model, and measure the difference.

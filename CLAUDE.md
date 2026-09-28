@@ -6,11 +6,11 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: Episode 03 done (project cards in #work from content/projects.ts; copy confirmed by Olu)
-- Last session: 03-project-cards
-- Next target: /log with MDX (content/log), then wire "Now building" and card "N log posts" to it
+- Phase: Episode 04 done (build log: MDX + zod, /log, /log/[slug], per-post OG, RSS; ShelfReady Ep00–05 published)
+- Last session: 04-build-log
+- Next target: Episode 05, /projects/[slug] case studies from content/case-studies (then repoint post "project" links)
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
-- Blockers: none; ShelfReady headline eval number lands when its evals run
+- Blockers: none; ShelfReady headline eval number lands with its Episode 06 eval
 
 ## Positioning (decided Sep 27)
 - **Title line:** Forward deployed product manager · AI product builder
@@ -79,7 +79,9 @@ export type LogPost = {
   metric?: string;              // e.g. "150 products seeded, 52 messy"
   linkedinUrl?: string;         // added after the post goes out
   commit?: string;              // commit or PR link as proof
+  draft: boolean;               // true: shows in `npm run dev`, never in production builds
 };
+// Validated with zod in lib/log.ts; a bad post fails the build.
 ```
 
 Seed projects in this order:
@@ -93,7 +95,7 @@ Seed projects in this order:
 Sections, in order: **Customer & problem** · **Strategy & scope** (what I chose not to build, and why) · **What I built** (architecture diagram) · **Key decisions & trade-offs** · **Results** (headline number + before/after chart) · **What broke** · **Roadmap / next steps** · **Build log** (links to every episode post) · **Links**.
 
 ## Log post template
-Every episode gets one post. The source material is the repo's session log, DECISIONS.md and commits. The full template and the matching LinkedIn post are in `episode-content-kit.md`.
+Every episode gets one post. The source material is the repo's session log, DECISIONS.md and commits. The full template (site post, LinkedIn post, short post) is in `docs/POST_TEMPLATE.md`. New posts start as `draft: true`; the LinkedIn and short versions go in `docs/posts/<slug>.md`.
 
 ## Design rules
 - Clean and fast: system font or one Google font, lots of whitespace, light + dark mode.

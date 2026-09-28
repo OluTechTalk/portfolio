@@ -1,0 +1,40 @@
+---
+draft: false
+slug: shelfready-ep01-foundation
+project: shelfready
+episode: 1
+title: "A green status page before a single feature"
+date: 2026-09-25
+summary: "Episode 01 had one finish line: a live URL showing Shopify, the database and the model key all connected. Getting there took about three hours and one confusing first deploy."
+pmTakeaway: "Define done as something you can open in a browser. \"Live URL, all green\" ended every scope debate before it started."
+buildTakeaway: "Make the health page name what's missing. A red check that says which setting is absent turned a blank deploy error into a checklist."
+metric: "~3 hours to a live, all-green status page"
+commit: "https://github.com/OluTechTalk/shelfready/commit/0c13114f833098aa36050d2c0d98681129c7129b"
+---
+
+**The goal.** ShelfReady will audit a Shopify catalog, fix it, and prove AI shopping agents do better on the fixed version. None of that matters if the plumbing is shaky. So Episode 01 had a single, visible finish line: a deployed `/status` page showing Shopify connected, the database connected, and a model key present, all green on the live URL.
+
+**The product call.** Two calls shaped this episode, both about how I build in public rather than what I build.
+
+First, *done means a URL*. Not "auth works on my machine" but a page anyone can open. It kept the session honest: every slice either moved a check to green or it wasn't part of this episode.
+
+Second, *secrets never touch the screen*. Every session is recorded, so any script that creates a credential writes it straight into the local env file and prints only a confirmation. It's a small rule, but a leaked token on video would cost more than any feature is worth.
+
+I also kept infrastructure lean on purpose. The Shopify admin token is cached in memory per server instance and refreshed five minutes before it expires, rather than kept in Redis. At demo traffic, a shared cache adds a dependency on the hot path for no gain. I wrote down when to revisit it: if token requests ever get rate-limited.
+
+**What I built.**
+- Shopify auth with the client credentials grant: a cached token, refreshed early, with concurrent requests sharing a single refresh and one retry on a 401
+- A typed Admin API client and a smoke test that fetches the shop name and product count
+- A one-off script that creates the Storefront token and writes it to the env file, never to the terminal
+- Postgres on Neon with Drizzle: a `products` table (raw JSON plus a content hash) and a `model_calls` table that will log every model call's tokens, latency and cost
+- The `/status` page, deployed to Vercel, with live checks and error messages scrubbed of anything credential-shaped
+
+In parallel, a second Claude Code session turned the scoring rubric into typed constants on its own branch, ready to merge when the audit work starts.
+
+**What broke.** The first Vercel deploy had no environment variables, and the domain returned a bare `DEPLOYMENT_NOT_FOUND`. After a redeploy, the status page did its job: each red check named the missing setting, one at a time, until they were all added and everything went green. That's the moment the "name what's missing" design paid for itself.
+
+A smaller one: the rubric branch imports `zod`, which wasn't installed on `main` yet. So it wouldn't typecheck until Episode 02 added it. Parallel work is fast, but it needs a merge plan.
+
+**The number.** About three hours from an empty scaffold to a live URL with every check green. The catalog is still empty: 0 products in Shopify, 0 synced, 0 model calls.
+
+**Next.** Episode 02: generate a 150-product outdoor-gear catalog, a third of it deliberately broken, and seed it into Shopify.

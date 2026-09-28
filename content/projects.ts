@@ -13,6 +13,12 @@ export type Project = {
   order: number;
 };
 
+/** Short display name: "ShelfReady — Agent-Ready Storefront" → "ShelfReady". */
+export function projectName(slug: string) {
+  const project = projects.find((p) => p.slug === slug);
+  return project ? project.title.split(" — ")[0] : slug;
+}
+
 export const projects: Project[] = [
   {
     slug: "shelfready",

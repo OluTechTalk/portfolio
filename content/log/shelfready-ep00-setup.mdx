@@ -1,0 +1,57 @@
+---
+draft: false
+slug: shelfready-ep00-setup
+project: shelfready
+episode: 0
+title: "Before any code: six accounts, a $0 stack, and three gotchas"
+date: 2026-09-24
+summary: I set up the full ShelfReady stack on free tiers before writing a line of app code, and hit three surprises that would have cost me the first episode.
+pmTakeaway: Decide the cost ceiling before the architecture. A $0 budget made the model choice for me, and I wrote that down as a decision instead of an accident.
+buildTakeaway: Verify every credential with a real call the night before. Two of mine behaved differently than the docs said.
+metric: 6 services connected, $0/month
+---
+
+**The goal.** ShelfReady answers one question for Shopify merchants: *can an AI shopping agent actually find and buy your products?* Before building anything, I wanted every service connected and tested, so Episode 01 could start on the product, not on account settings.
+
+**The product call.** I set a hard constraint: $0 a month until the product proves its value. That meant Vercel Hobby, Neon's free Postgres, Upstash's free Redis, and Gemini's free tier as the default model. The trade-off is rate limits and a model that may not be the best one. So I logged a decision: build on Gemini now, and compare models later with the same eval set, once there's a baseline to compare against.
+
+**What I set up.**
+- A GitHub repo and a Vercel project, ready to deploy on first push
+- A Shopify development store and a custom app with the scopes the product needs
+- Neon Postgres for the catalog copy and eval results; Upstash Redis for rate limiting
+- A Gemini API key, tested with a real generation call
+- A written spec, a scoring rubric and a decisions log, before any code
+
+**What broke (or almost did).**
+1. Shopify's bare developer URL opens an internal employee login. The right place is the Dev Dashboard.
+2. `create-next-app` refuses to run in a folder that already has files, and my starter kit was already there. Fix: move the kit aside, scaffold, move it back.
+3. Google AI Studio now issues keys in a new format. Generation calls worked, but the list-models endpoint returned 403. So the status page only checks that the key exists instead of calling an endpoint that fails for reasons unrelated to the app.
+
+**The number.** 6 services connected and verified the night before. Running cost: $0 a month.
+
+**Next.** Episode 01: scaffold the app, connect Shopify and the database, and get a live status page that's all green.
+
+{/* LinkedIn version (not rendered on the site):
+
+I spent the night before my build writing zero code.
+
+I'm building ShelfReady: a tool that checks whether AI shopping agents can find and buy products from a Shopify store, then fixes the catalog and proves it with evals.
+
+Before Episode 01, I set one product constraint: $0/month until it proves its value.
+
+That one call shaped the stack: Vercel, Neon Postgres, Upstash Redis, and Gemini's free tier. I logged the trade-off instead of pretending it wasn't one: model comparison comes later, measured on the same eval set.
+
+Then I tested every credential with a real call. Three things broke:
+→ Shopify's bare developer URL opens an employee login
+→ create-next-app refuses a folder that already has files
+→ A new-format Google API key worked for generation but got a 403 on list-models
+
+None of that is glamorous. All of it would have eaten my first build session.
+
+The PM lesson: decide the cost ceiling before the architecture.
+The builder lesson: verify credentials the night before, not on day one.
+
+Full build log: https://oluakele.com/log/shelfready-ep00-setup
+
+#AIProductManagement #BuildInPublic #AIAgents
+*/}

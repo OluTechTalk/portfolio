@@ -1,0 +1,38 @@
+---
+draft: false
+slug: shelfready-ep02-catalog
+project: shelfready
+episode: 2
+title: "Seeding 150 products, a third of them broken on purpose"
+date: 2026-09-27
+summary: "I generated a demo catalog with 50 deliberately messy products, and then my laptop froze halfway through seeding it into Shopify."
+pmTakeaway: "Build the answer key before the test. Because I injected every defect myself, every audit and eval from here on is scored against known answers, not a model's opinion."
+buildTakeaway: "Keep resume state where the work lands. Storing a hash on each Shopify product made the interrupted seed restart cleanly, with nothing lost or duplicated."
+metric: "150 products seeded, 50 messy; defects matched 150/150"
+commit: "https://github.com/OluTechTalk/shelfready/commit/c6a71f183896dd50b7802b4237a123287429f466"
+---
+
+**The goal.** ShelfReady's pitch is that messy product data makes AI shopping agents fail. To prove that, I need a store whose mess I know exactly. This episode's job: about 150 outdoor-gear products in the Shopify dev store and in Postgres, with a third of them broken in the specific ways the rubric checks for.
+
+**The product call.** The obvious move was to have a model write the catalog. I didn't. I wrote a deterministic generator instead: templates plus a seeded random number generator, no model calls.
+
+The reason is measurement. If a model writes the products, I only *think* I know what's wrong with them. If my code injects each defect, the ground truth is exact, and every audit score and eval result in later episodes can be checked against a known answer. It's also free and reproducible byte for byte. The trade-off is copy that reads more templated than a model's would, and I accepted that.
+
+One more call came from how Shopify actually behaves. Its API rejects exact duplicate variants, so "duplicate variants" can't exist in the form I'd planned. I seeded them the way they really show up in merchant catalogs: synonyms like `M` / `Medium` and `Black` / `Blk`. It's a harder and more realistic defect for an agent to trip over.
+
+**What I built.**
+- A generator that writes 150 products across 6 rubric categories, plus a ground-truth file listing every defect it injected
+- 8 defect types (vague titles, missing attributes, marketing-only descriptions and more), each on 13 products, with a mix of 1 to 4 defects per messy product
+- An idempotent seed that upserts each product by handle and backs off when Shopify's API throttles
+- A sync that mirrors the whole catalog into Postgres with a content hash
+- A verifier that re-detects every defect from the synced data and compares it with the ground truth
+
+**What broke.** My laptop froze mid-session, during the first seed run. When I recovered, the damage report was oddly good. The generator was committed, the in-progress code was complete on disk, git was clean, and the fixtures were valid. In Shopify, 54 of 150 products had landed, each carrying its seed hash.
+
+That hash is why the recovery was boring, which is what you want. Resume state lives on the products themselves, so rerunning the seed skipped the 54, created the other 96 in 103 seconds with 0 failures, and a third run skipped all 150. I'd originally planned a local progress file. The freeze showed exactly why the store has to be the source of truth.
+
+I changed one habit because of it: push after every slice, so a crash can cost at most one slice.
+
+**The number.** 150 products: 100 clean, 50 messy. Shopify, Postgres and the ground truth all show 150, with 0 duplicate handles, and the per-product defect sets match on 150 of 150. Model calls: 0, so this episode cost nothing.
+
+**Next.** Episode 03: score every product against the rubric and see whether the audit can tell the messy ones apart.

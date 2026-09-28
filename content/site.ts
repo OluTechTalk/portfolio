@@ -14,9 +14,9 @@ export const site = {
   },
 } as const;
 
-// Pages for Log and About don't exist yet, so they point at home sections.
+// About has no page yet, so it points at the home hero.
 export const nav = [
   { label: "Work", href: "/#work" },
-  { label: "Log", href: "/#now-building" },
+  { label: "Log", href: "/log" },
   { label: "About", href: "/#about" },
 ] as const;
