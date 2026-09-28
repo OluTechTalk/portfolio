@@ -1,6 +1,8 @@
 import Image from "next/image";
 
+import { ProjectCard } from "@/components/project-card";
 import { buttonVariants } from "@/components/ui/button";
+import { projects } from "@/content/projects";
 import { site } from "@/content/site";
 import { cn } from "@/lib/utils";
 import headshot from "@/public/headshot.jpg";
@@ -71,14 +73,25 @@ export default function Home() {
         </p>
       </section>
 
-      {/* Episode 03 fills this with project cards from content/projects.ts. */}
-      <section id="work" className="scroll-mt-8 py-section" aria-labelledby="work-heading">
+      <section
+        id="work"
+        className="scroll-mt-8 py-section"
+        aria-labelledby="work-heading"
+      >
         <h2 id="work-heading" className="text-title font-semibold">
           Work
         </h2>
         <p className="mt-3 text-muted-foreground">
-          Case studies with eval results are on the way.
+          Each project: the customer problem, what I built, and the eval number
+          that proves it.
         </p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          {[...projects]
+            .sort((a, b) => a.order - b.order)
+            .map((project) => (
+              <ProjectCard key={project.slug} project={project} />
+            ))}
+        </div>
       </section>
     </main>
   );

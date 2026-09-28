@@ -13,7 +13,6 @@ export type Project = {
   order: number;
 };
 
-// TODO(Olu): confirm one-liners, customers and tags before cards ship in Episode 03.
 export const projects: Project[] = [
   {
     slug: "shelfready",

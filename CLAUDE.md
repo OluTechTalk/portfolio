@@ -6,11 +6,11 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: Episode 02 done (design system: Inter + teal accent, header/footer, theme toggle, home hero, Now building line, OG image)
-- Last session: 02-design-hero
-- Next target: Episode 03, project cards in #work from content/projects.ts
+- Phase: Episode 03 done (project cards in #work from content/projects.ts; copy confirmed by Olu)
+- Last session: 03-project-cards
+- Next target: /log with MDX (content/log), then wire "Now building" and card "N log posts" to it
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
-- Blockers: Olu to confirm project one-liners/customers/tags in content/projects.ts (TODO)
+- Blockers: none; ShelfReady headline eval number lands when its evals run
 
 ## Positioning (decided Sep 27)
 - **Title line:** Forward deployed product manager · AI product builder
