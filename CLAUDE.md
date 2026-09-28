@@ -6,11 +6,11 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: Episode 01 (scaffold done; building the "coming soon" page, then Vercel deploy + domain)
-- Last session: 01-scaffold (in progress)
-- Next target: coming-soon page at app/page.tsx, push, import to Vercel, connect oluakele.com
+- Phase: Episode 02 done (design system: Inter + teal accent, header/footer, theme toggle, home hero, Now building line, OG image)
+- Last session: 02-design-hero
+- Next target: Episode 03, project cards in #work from content/projects.ts
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
-- Blockers: headshot file, Google Calendar booking link (not needed for Ep01)
+- Blockers: Olu to confirm project one-liners/customers/tags in content/projects.ts (TODO)
 
 ## Positioning (decided Sep 27)
 - **Title line:** Forward deployed product manager · AI product builder

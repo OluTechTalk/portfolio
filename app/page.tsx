@@ -1,43 +1,85 @@
-const LINKEDIN_URL = "https://www.linkedin.com/in/oluwaseye-akele/";
-const EMAIL = "olu.akele@gmail.com";
+import Image from "next/image";
+
+import { buttonVariants } from "@/components/ui/button";
+import { site } from "@/content/site";
+import { cn } from "@/lib/utils";
+import headshot from "@/public/headshot.jpg";
+
+const external = { target: "_blank", rel: "noopener noreferrer" } as const;
+const buttonSize = "h-11 px-5 text-base";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center px-6 py-16 sm:py-24">
-      <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-        Olu Akele
-      </h1>
-      <p className="mt-3 text-lg font-medium text-muted-foreground">
-        Forward deployed product manager · AI product builder
-      </p>
-      <p className="mt-8 text-base leading-7 sm:text-lg sm:leading-8">
-        I&apos;m a product manager who builds. I work inside messy real-world
-        systems (catalogs, APIs, databases), figure out what the customer
-        needs, ship the AI that does it, and prove it works with evals. Every
-        step is documented in public.
-      </p>
-      <p className="mt-6 text-base leading-7 text-muted-foreground">
-        Full site and build log coming soon: first project, ShelfReady, is in
-        progress.
-      </p>
-      <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-base font-medium">
-        <li>
+    <main className="mx-auto w-full max-w-content px-gutter">
+      <section id="about" className="scroll-mt-8 pt-10 pb-12 sm:pt-16">
+        <Image
+          src={headshot}
+          alt="Olu Akele, smiling, in a pink button-down shirt"
+          width={144}
+          height={144}
+          preload
+          placeholder="blur"
+          className="size-28 rounded-full object-cover sm:size-36"
+        />
+        <h1 className="mt-8 text-display font-semibold">{site.name}</h1>
+        <p className="mt-3 text-lg font-medium text-muted-foreground">
+          {site.title}
+        </p>
+        <p className="mt-6 max-w-prose text-lead">{site.pitch}</p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <a
-            href={LINKEDIN_URL}
-            className="underline underline-offset-4 hover:text-muted-foreground"
+            href="#work"
+            className={cn(
+              buttonVariants(),
+              buttonSize,
+              "bg-brand text-brand-foreground hover:bg-brand/90",
+            )}
+          >
+            See the work
+          </a>
+          <a
+            href={site.links.booking}
+            {...external}
+            className={cn(buttonVariants({ variant: "outline" }), buttonSize)}
+          >
+            Book a call
+          </a>
+          <a
+            href={site.links.linkedin}
+            {...external}
+            className={cn(buttonVariants({ variant: "outline" }), buttonSize)}
           >
             LinkedIn
           </a>
-        </li>
-        <li>
-          <a
-            href={`mailto:${EMAIL}`}
-            className="underline underline-offset-4 hover:text-muted-foreground"
-          >
-            {EMAIL}
-          </a>
-        </li>
-      </ul>
+        </div>
+      </section>
+
+      <section
+        id="now-building"
+        aria-label="Now building"
+        className="scroll-mt-8 border-t py-6"
+      >
+        <p className="flex items-baseline gap-3 text-muted-foreground">
+          <span
+            className="size-2 shrink-0 translate-y-[-1px] rounded-full bg-brand"
+            aria-hidden
+          />
+          <span>
+            <span className="font-medium text-foreground">Now building:</span>{" "}
+            ShelfReady, an agent-ready storefront. Build log coming soon.
+          </span>
+        </p>
+      </section>
+
+      {/* Episode 03 fills this with project cards from content/projects.ts. */}
+      <section id="work" className="scroll-mt-8 py-section" aria-labelledby="work-heading">
+        <h2 id="work-heading" className="text-title font-semibold">
+          Work
+        </h2>
+        <p className="mt-3 text-muted-foreground">
+          Case studies with eval results are on the way.
+        </p>
+      </section>
     </main>
   );
 }
