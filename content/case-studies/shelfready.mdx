@@ -1,0 +1,84 @@
+---
+draft: false
+slug: shelfready
+project: shelfready
+summary: "An in-progress case study: auditing a Shopify catalog for AI shopping agents, fixing it with a human in the loop, and letting a real agent shop it, with the before/after eval still to come."
+updated: 2026-09-28
+---
+
+import { BeforeAfter } from "@/components/case-study/before-after";
+import { ShelfReadyArchitecture } from "@/components/case-study/shelfready-architecture";
+
+## Customer & problem
+
+A mid-size outdoor-gear brand hears that shoppers are starting to buy through AI assistants. Its catalog has vague titles, missing sizes and materials, and inconsistent variants, so agents skip its products. The brand doesn't know how big the gap is, or which fixes matter.
+
+ShelfReady asks one question of every product: *could an AI shopping agent, given only this product's data, confidently match it to a shopper's request and answer their follow-up questions?* Then it closes the gap and measures whether agents actually shop better.
+
+## Strategy & scope
+
+The MVP is four pieces: a **readiness audit** that scores each product 0–100, an **AI fixer with a human review queue**, an **MCP server** so agents can shop the store, and an **eval** that runs the same shopping tasks on the catalog before and after fixing.
+
+What I chose not to build, and why:
+
+- **No payments in the agent path.** The agent's last step returns a Shopify checkout link, and the shopper pays on Shopify. That keeps payment and personal data away from the agent entirely.
+- **No auto-applied fixes.** The fixer proposes and a person approves. Wrong product data causes returns and brand damage, and every approval becomes labeled data for improving the fixer.
+- **One store, Shopify only, no app-install flow.** Multiple stores, other platforms and OAuth install are out of scope for v1. They add surface area without changing whether the core idea works.
+- **$0 a month until it proves its value.** That meant free tiers everywhere and Gemini as the default model, with a model comparison planned once there's an eval to compare on.
+
+The demo store is seeded rather than scraped. A deterministic generator built 150 products and injected 8 kinds of defects into 50 of them, so every audit and eval is scored against an exact answer key.
+
+## What I built (so far)
+
+<ShelfReadyArchitecture />
+
+- **P0 Setup:** Shopify auth with a cached, early-refreshed token; Postgres on Neon; a live `/status` page that checks every connection.
+- **P1 Catalog:** the generator plus a ground-truth file, an idempotent and resumable seed, and a sync that mirrors the store into Postgres.
+- **P2 Audit:** a rubric of seven checks, category detection from the product's own data (150/150 correct), one model call per product that must quote its evidence, and an `/audit` page.
+- **P3 Fixer:** rule-based and grounded model fixes, a `/review` queue (anyone can view, only an admin can change), write-back to Shopify, and a before/after view.
+- **P4 MCP:** `search_products`, `get_product`, `check_availability` and `create_cart` on a public, rate-limited endpoint, tested end to end with Claude.
+
+## Key decisions & trade-offs
+
+- **Ground truth before measurement.** A deterministic generator rather than model-written products. *Trade-off:* the copy reads more templated.
+- **Weak checks cap the band.** The first audit ranked products correctly but called 89% of the store agent-ready, because strong checks hid fatal gaps. Any check below 0.5 now caps a product at Partial, and two or more make it Not ready. *Trade-off:* bands no longer follow from the score alone, so the UI shows which check capped each product. Raising the cutoffs gave a similar split, but with thresholds picked after seeing the data.
+- **Grounded fixes or no fixes.** Model fixes need a verbatim quote from the product's own data. Titles may only use words already there, and descriptions only numbers already there. Anything else goes to the merchant. *Trade-off:* some reasonable rewrites get dropped.
+- **Duplicate variants go to the merchant.** Deleting a variant moves inventory and can break orders, which isn't a call the fixer should make.
+- **Search on the synced copy, stock and carts live.** Shopify's storefront search can't filter on the structured attributes the fixer improved. *Trade-off:* search is only as fresh as the last sync.
+- **A public MCP endpoint, rate-limited, with no login.** Anyone can connect an agent to the demo. The tools are read-only except cart creation, which takes no payment or customer data.
+
+## Results
+
+The headline result, agent shopping success before vs after, **isn't in yet**. The eval is built: 40 shopping tasks with ground-truth answers, and a runner that uses the same model and tools on the original messy catalog and on the fixed one. The first run and its numbers will be the next episode.
+
+What's measured so far is the **catalog audit**, using the same rubric and the same model before and after the fixes:
+
+<BeforeAfter
+  stats={[
+    { label: "Store readiness score", before: "94.1", after: "98.3" },
+    { label: "Products agent-ready", before: "78%", after: "99.3%" },
+    { label: "Products not ready", before: "11", after: "0" },
+  ]}
+  caption="Audit before and after the review queue: 101 fixes applied (1 edited), 2 rejected, 15 left for the merchant. Source: Episode 04."
+/>
+
+Messy products averaged 82.4 before and 94.9 after, and clean products stayed at 100. One caveat: the clean products score exactly 100 because the generator makes them perfect, and a real catalog won't. That's why the audit number isn't the headline. The eval is.
+
+In a live test, Claude went from *"waterproof hiking boots, men's 10, under $150"* to a working checkout link in 7 tool calls. There was no boot under budget, so it offered the closest match: a waterproof hiking shoe at $115.95.
+
+## What broke
+
+- **A laptop freeze mid-seed.** 54 of 150 products had landed. Because resume state lives on each Shopify product, the re-run skipped those and created the other 96 with 0 failures.
+- **A score that hid the defects.** The first audit said 89% agent-ready and 0% not ready. It was fixed with the band gate described above.
+- **Free-tier quotas.** An unpaced audit hit the per-minute limit after about 100 calls and saved a partial run. Calls are now spaced out, and partial runs are never saved.
+- **An "all-or-nothing" apply that wasn't.** The first test landed 6 of 8 changes and marked all 8 failed. Shopify has no transaction across mutations, so each change now records its own result.
+- **A fixer running on a stale audit.** It drafted 11 rewrites of descriptions that were already fixed. They were deleted before review, and the fixer now refuses stale products.
+- **An invisible store.** Products were Active but not published to a sales channel, so the Storefront API saw nothing. Active isn't the same as published.
+- **"Lynx 30f."** The fixer had treated the product's URL handle as evidence, so a bad spec looked grounded. Specs must now match the product's own text in number and unit. A re-check of all 50 live fixes found 3 wrong, and all 3 were corrected.
+
+## Roadmap
+
+- **P5 Eval + demo:** run the 40 tasks on the messy and the fixed catalog and report success rate, steps, wrong-product rate and cost per task. Then add the before/after chart and a demo mode to the app.
+- **Model comparison:** the same 40 tasks on Gemini, an open model on Groq and Claude, reporting success rate against cost per task.
+- **P6 Ship:** finish this case study with the headline number, record a Loom walkthrough, and write the launch post.
+- **Known rough edges:** drafted descriptions can only answer what the data covers, and free-text search is loose without structured filters.

@@ -3,8 +3,9 @@ import Link from "next/link";
 
 import { ProjectCard } from "@/components/project-card";
 import { buttonVariants } from "@/components/ui/button";
-import { projectName, projects } from "@/content/projects";
+import { earlierWork, projectName, projects } from "@/content/projects";
 import { site } from "@/content/site";
+import { getCaseStudies } from "@/lib/case-studies";
 import { countPostsByProject, formatEpisode, getLatestPost } from "@/lib/log";
 import { cn } from "@/lib/utils";
 import headshot from "@/public/headshot.jpg";
@@ -13,10 +14,14 @@ const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 const buttonSize = "h-11 px-5 text-base";
 
 export default async function Home() {
-  const [latest, logCounts] = await Promise.all([
+  const [latest, logCounts, caseStudies] = await Promise.all([
     getLatestPost(),
     countPostsByProject(),
+    getCaseStudies(),
   ]);
+  const caseStudyHrefs = Object.fromEntries(
+    caseStudies.map((c) => [c.project, `/projects/${c.slug}`]),
+  );
 
   return (
     <main className="mx-auto w-full max-w-content px-gutter">
@@ -111,9 +116,36 @@ export default async function Home() {
                 key={project.slug}
                 project={project}
                 logCount={logCounts[project.slug] ?? 0}
+                caseStudyHref={caseStudyHrefs[project.slug]}
               />
             ))}
         </div>
+
+        {earlierWork.length > 0 && (
+          <div className="mt-12">
+            <h3 className="text-sm font-semibold text-muted-foreground">
+              Earlier work
+            </h3>
+            <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+              {earlierWork.map((item) => (
+                <li
+                  key={item.name}
+                  className="rounded-lg border border-dashed px-4 py-3"
+                >
+                  <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-medium">
+                    {item.name}
+                    <span className="rounded-full border px-2 py-0.5 text-xs font-normal text-muted-foreground">
+                      {item.note}
+                    </span>
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {item.oneLiner}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
     </main>
   );

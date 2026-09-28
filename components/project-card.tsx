@@ -12,9 +12,11 @@ const statusLabel: Record<Project["status"], string> = {
 export function ProjectCard({
   project,
   logCount,
+  caseStudyHref,
 }: {
   project: Project;
   logCount: number;
+  caseStudyHref?: string; // only set when the case study is published in this build
 }) {
   const planned = project.status === "planned";
   const links = [
@@ -71,7 +73,7 @@ export function ProjectCard({
         ))}
       </ul>
 
-      {(links.length > 0 || project.caseStudy || logCount > 0) && (
+      {(links.length > 0 || caseStudyHref || logCount > 0) && (
         <ul className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6 text-sm font-medium">
           {links.map((link) => (
             <li key={link.label}>
@@ -86,10 +88,10 @@ export function ProjectCard({
               </a>
             </li>
           ))}
-          {project.caseStudy && (
+          {caseStudyHref && (
             <li>
               <Link
-                href={`/projects/${project.caseStudy}`}
+                href={caseStudyHref}
                 className="underline underline-offset-4 hover:text-brand"
               >
                 Case study

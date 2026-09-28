@@ -28,7 +28,9 @@ export const projects: Project[] = [
     customer: "Shopify merchants selling to AI shopping agents",
     status: "in-progress",
     tags: ["MCP", "Shopify", "Evals", "Product strategy"],
+    demoUrl: "https://shelfready-ashen.vercel.app",
     repoUrl: "https://github.com/OluTechTalk/shelfready",
+    caseStudy: "shelfready",
     order: 1,
   },
   {
@@ -60,5 +62,22 @@ export const projects: Project[] = [
     status: "planned",
     tags: ["Evals", "Monitoring", "LLMOps"],
     order: 4,
+  },
+];
+
+// Smaller "Earlier work" row under the main cards. No links until Olu is
+// ready to show them.
+export type EarlierWork = {
+  name: string;
+  oneLiner: string;
+  note: string; // e.g. "Live soon"
+};
+
+export const earlierWork: EarlierWork[] = [
+  {
+    name: "Wherewise",
+    oneLiner:
+      "A lifestyle-first relocation tool: tell it how you want to live, and it recommends places that fit, then shows rentals there.",
+    note: "Live soon",
   },
 ];

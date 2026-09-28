@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { projectName } from "@/content/projects";
+import { caseStudyHref } from "@/lib/case-studies";
 import {
   formatDate,
   formatEpisode,
@@ -49,6 +50,9 @@ export default async function LogPostPage({
   if (!found) notFound();
   const { post, Content } = found;
   const { prev, next } = await getAdjacentPosts(post);
+  // The case study when one is published, otherwise the project card on home.
+  const projectHref =
+    (await caseStudyHref(post.project)) ?? `/#project-${post.project}`;
   const project = projectName(post.project);
 
   return (
@@ -123,10 +127,9 @@ export default async function LogPostPage({
                 </a>
               </li>
             )}
-            {/* TODO(Ep05): point at /projects/[slug] once case study pages exist. */}
             <li>
               <Link
-                href={`/#project-${post.project}`}
+                href={projectHref}
                 className="underline underline-offset-4 hover:text-brand"
               >
                 About the {project} project
