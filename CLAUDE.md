@@ -6,11 +6,11 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: Episode 04 done (build log: MDX + zod, /log, /log/[slug], per-post OG, RSS; ShelfReady Ep00–05 published)
-- Last session: 04-build-log
-- Next target: Episode 05, /projects/[slug] case studies from content/case-studies (then repoint post "project" links)
+- Phase: **v1 live** at oluakele.com (home, /log, /projects/shelfready, /about, sitemap, 404; violet→rose visual refresh)
+- Last session: 05-case-study-about
+- Next target: ShelfReady eval headline → projects.ts `headline` (card, case study, proof strip pick it up); approve portfolio-ep05-v1 post
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
-- Blockers: none; ShelfReady headline eval number lands with its Episode 06 eval
+- Blockers: résumé download on hold (Olu's call); Wherewise "Live soon" until Olu is ready; more career stats pending Olu's other résumés
 
 ## Positioning (decided Sep 27)
 - **Title line:** Forward deployed product manager · AI product builder
@@ -45,7 +45,7 @@ I'm a product manager who builds. I work inside messy real-world systems (catalo
 ## Stats (to discuss with Olu)
 Only stats with a source. Two kinds:
 - **Build stats (automatic):** from content: episodes shipped, eval tasks run, headline eval deltas.
-- **PM career stats (Olu supplies):** e.g. products launched, adoption or revenue impact, team size. Each one needs a role and year next to it, and should match the résumé.
+- **PM career stats (Olu supplies):** e.g. products launched, adoption or revenue impact, team size. Each one needs a role and year next to it, and should match the résumé. Live in `content/career.ts`; numbers from other résumé versions are used only if they agree with it. Never invent placeholder stats.
 
 ## Content model
 Project data lives in `content/projects.ts` and log posts live in `content/log/*.mdx`. Pages read from these; never hard-code details in components.
@@ -99,6 +99,7 @@ Every episode gets one post. The source material is the repo's session log, DECI
 
 ## Design rules
 - Clean and fast: system font or one Google font, lots of whitespace, light + dark mode.
+- Palette (Olu, Sep 28): violet → rose accent gradient (`brand`, `brand-2`), violet-tinted neutrals, glow + dot-grid backdrop. No teal/LinkedIn-blue. Keep every text pair ≥ 4.5:1.
 - Project cards lead with the headline number, not the tech stack.
 - "In progress" and "planned" cards are shown on purpose; they signal momentum. Style them clearly but quietly.
 - Every page must score 95+ on Lighthouse performance and accessibility. Images via `next/image`, alt text on everything (including the headshot).

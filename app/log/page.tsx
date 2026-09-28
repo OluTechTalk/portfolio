@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-
-import { LogEntries } from "@/components/log-entries";
 import { LogFilter } from "@/components/log-filter";
 import { projectName } from "@/content/projects";
 import { getPosts } from "@/lib/log";
@@ -38,10 +35,7 @@ export default async function LogPage() {
         </a>
       </p>
       <div className="mt-10">
-        {/* The static HTML carries the full list; the filter takes over in the browser. */}
-        <Suspense fallback={<LogEntries posts={posts} />}>
-          <LogFilter posts={posts} options={options} />
-        </Suspense>
+        <LogFilter posts={posts} options={options} />
       </div>
     </main>
   );

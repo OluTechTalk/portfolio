@@ -11,6 +11,7 @@ export type Project = {
   videoUrl?: string; // Loom
   caseStudy?: string; // MDX slug
   order: number;
+  featured?: boolean; // false: log/filter only, no card on home (default true)
 };
 
 /** Short display name: "ShelfReady — Agent-Ready Storefront" → "ShelfReady". */
@@ -20,6 +21,18 @@ export function projectName(slug: string) {
 }
 
 export const projects: Project[] = [
+  {
+    slug: "portfolio",
+    title: "Portfolio — this site",
+    oneLiner:
+      "oluakele.com, built in public with Claude Code: Next.js, MDX build log, case studies.",
+    customer: "Hiring managers and teams evaluating a forward deployed PM",
+    status: "shipped",
+    tags: ["Next.js", "MDX", "Build in public"],
+    repoUrl: "https://github.com/OluTechTalk/portfolio",
+    order: 99,
+    featured: false,
+  },
   {
     slug: "shelfready",
     title: "ShelfReady — Agent-Ready Storefront",

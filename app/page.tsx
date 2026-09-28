@@ -3,10 +3,16 @@ import Link from "next/link";
 
 import { ProjectCard } from "@/components/project-card";
 import { buttonVariants } from "@/components/ui/button";
+import { careerStats } from "@/content/career";
 import { earlierWork, projectName, projects } from "@/content/projects";
-import { site } from "@/content/site";
+import { howIWork, site } from "@/content/site";
 import { getCaseStudies } from "@/lib/case-studies";
-import { countPostsByProject, formatEpisode, getLatestPost } from "@/lib/log";
+import {
+  countPostsByProject,
+  formatEpisode,
+  getLatestPost,
+  getPosts,
+} from "@/lib/log";
 import { cn } from "@/lib/utils";
 import headshot from "@/public/headshot.jpg";
 
@@ -14,19 +20,46 @@ const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 const buttonSize = "h-11 px-5 text-base";
 
 export default async function Home() {
-  const [latest, logCounts, caseStudies] = await Promise.all([
+  const [latest, logCounts, caseStudies, posts] = await Promise.all([
     getLatestPost(),
     countPostsByProject(),
     getCaseStudies(),
+    getPosts(),
   ]);
   const caseStudyHrefs = Object.fromEntries(
     caseStudies.map((c) => [c.project, `/projects/${c.slug}`]),
   );
+  const featured = projects
+    .filter((p) => p.featured !== false)
+    .sort((a, b) => a.order - b.order);
+  const countStatus = (status: string) =>
+    featured.filter((p) => p.status === status).length;
+
+  // Proof strip: every number is computed from content and links to its source.
+  const buildStats = [
+    {
+      value: String(featured.length),
+      label: `projects (${countStatus("in-progress")} in progress, ${countStatus("planned")} planned)`,
+      href: "#work",
+    },
+    {
+      value: String(posts.length),
+      label: "episodes shipped and written up in public",
+      href: "/log",
+    },
+    ...featured
+      .filter((p) => p.headline && caseStudyHrefs[p.slug])
+      .map((p) => ({
+        value: p.headline as string,
+        label: `${projectName(p.slug)} headline eval result`,
+        href: caseStudyHrefs[p.slug],
+      })),
+  ];
 
   return (
     <main className="w-full">
       <section
-        id="about"
+        id="intro"
         className="mx-auto max-w-content scroll-mt-8 px-gutter pt-8 pb-14 sm:pt-14"
       >
         <div className="inline-block rounded-full bg-linear-to-br from-brand to-brand-2 p-1 shadow-lg shadow-brand/20">
@@ -127,16 +160,14 @@ export default async function Home() {
           that proves it.
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {[...projects]
-            .sort((a, b) => a.order - b.order)
-            .map((project) => (
-              <ProjectCard
-                key={project.slug}
-                project={project}
-                logCount={logCounts[project.slug] ?? 0}
-                caseStudyHref={caseStudyHrefs[project.slug]}
-              />
-            ))}
+          {featured.map((project) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              logCount={logCounts[project.slug] ?? 0}
+              caseStudyHref={caseStudyHrefs[project.slug]}
+            />
+          ))}
         </div>
 
         {earlierWork.length > 0 && (
@@ -164,6 +195,144 @@ export default async function Home() {
             </ul>
           </div>
         )}
+      </section>
+
+      <section
+        id="how-i-work"
+        aria-labelledby="how-heading"
+        className="scroll-mt-8 border-y bg-band"
+      >
+        <div className="mx-auto max-w-content px-gutter py-section">
+          <p className="eyebrow">Product + build</p>
+          <h2 id="how-heading" className="mt-2 text-title font-semibold">
+            How I work
+          </h2>
+          <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {howIWork.map((step, i) => (
+              <li key={step.title} className="rounded-xl border bg-card p-5">
+                <span className="bg-linear-to-r from-brand to-brand-2 bg-clip-text text-sm font-semibold text-transparent">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-2 font-semibold tracking-tight">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">{step.line}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section
+        id="proof"
+        aria-labelledby="proof-heading"
+        className="mx-auto max-w-content scroll-mt-8 px-gutter py-section"
+      >
+        <p className="eyebrow">Proof</p>
+        <h2 id="proof-heading" className="mt-2 text-title font-semibold">
+          Numbers, with sources
+        </h2>
+        <p className="mt-3 text-muted-foreground">
+          Every number links to where it comes from.
+        </p>
+
+        <h3 className="mt-8 text-sm font-semibold text-muted-foreground">
+          Building in public
+        </h3>
+        <ul className="mt-3 grid gap-3 sm:grid-cols-3">
+          {buildStats.map((stat) => (
+            <li key={stat.label}>
+              <Link
+                href={stat.href}
+                className="group block h-full rounded-xl border bg-card p-5 transition hover:border-brand/50"
+              >
+                <span className="block text-3xl font-semibold tracking-tight">
+                  {stat.value}
+                </span>
+                <span className="mt-1 block text-sm text-muted-foreground group-hover:text-foreground">
+                  {stat.label} <span aria-hidden>→</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <h3 className="mt-10 text-sm font-semibold text-muted-foreground">
+          Product career
+        </h3>
+        <ul className="mt-3 grid gap-3 sm:grid-cols-3">
+          {careerStats.map((stat) => (
+            <li key={stat.label}>
+              <a
+                href={site.links.linkedin}
+                {...external}
+                className="group block h-full rounded-xl border bg-card p-5 transition hover:border-brand/50"
+              >
+                <span className="block text-3xl font-semibold tracking-tight">
+                  {stat.value}
+                </span>
+                <span className="mt-1 block text-sm">{stat.label}</span>
+                <span className="mt-3 block text-xs text-muted-foreground group-hover:text-foreground">
+                  {stat.role}, {stat.company} · {stat.years}
+                  <span className="sr-only"> (source: LinkedIn)</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section
+        id="contact"
+        aria-labelledby="contact-heading"
+        className="mx-auto max-w-content scroll-mt-8 px-gutter pb-section"
+      >
+        <div className="rounded-2xl bg-linear-to-br from-brand to-brand-2 p-px shadow-lg shadow-brand/10">
+          <div className="rounded-[calc(1rem-1px)] bg-card px-6 py-10 sm:px-10">
+            <p className="eyebrow">Contact</p>
+            <h2 id="contact-heading" className="mt-2 text-title font-semibold">
+              Let&apos;s talk
+            </h2>
+            <p className="mt-3 max-w-prose text-muted-foreground">
+              Hiring a PM who can also build and ship the AI? I&apos;d like to
+              hear about the problem.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={`mailto:${site.links.email}`}
+                className={cn(
+                  buttonVariants(),
+                  buttonSize,
+                  "bg-linear-to-r from-brand to-brand-2 text-brand-foreground shadow-md shadow-brand/25 hover:opacity-90",
+                )}
+              >
+                Email me
+              </a>
+              <a
+                href={site.links.booking}
+                {...external}
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  buttonSize,
+                  "bg-card",
+                )}
+              >
+                Book a call
+              </a>
+              <a
+                href={site.links.linkedin}
+                {...external}
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  buttonSize,
+                  "bg-card",
+                )}
+              >
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );

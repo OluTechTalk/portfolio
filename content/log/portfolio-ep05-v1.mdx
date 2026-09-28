@@ -1,0 +1,41 @@
+---
+draft: true
+slug: portfolio-ep05-v1
+project: portfolio
+episode: 5
+title: "Building my portfolio in public, in five episodes"
+date: 2026-09-28
+summary: "I built oluakele.com the same way I build products: small slices, a plan before each one, and a written log, from a coming-soon page to a site with a build log, a case study and proof that links to its sources."
+pmTakeaway: "Ship the smallest public version first, then let real feedback steer. The first palette read as \"LinkedIn\" to me once I saw it live, so it changed the same day."
+buildTakeaway: "Measure where the measurement is reliable. Local Lighthouse on a busy laptop swung from 57 to 87 on the same page, so performance gets checked on the deployed site."
+metric: "5 episodes, 6 build-log posts, 1 case study; accessibility 100 on every page"
+---
+
+**The goal.** A portfolio that shows both halves of the job in under a minute: how I think about a problem as a PM, and proof that I build the thing myself. It also had to be the kind of thing I'd ship for a customer: fast, accessible, and easy to keep up to date, because every ShelfReady episode needs a place to land.
+
+**The product call.** Scope by episode, not by page count. Each episode had a single finish line and a written plan I approved before any code was touched:
+
+1. a coming-soon page live on the domain
+2. the design system and the real hero
+3. project cards
+4. the build log
+5. the case study, the About page, and the polish
+
+The other call was the content model. Project details and posts live in content files, never inside components, so adding an episode means writing one file. No database, no CMS, and every page is static.
+
+**What I built.**
+- Next.js, Tailwind and shadcn/ui: the same stack as the project apps, so everything reads as one body of work
+- An MDX build log. Each post's frontmatter is checked with zod at build time, drafts show only in development, and every post gets its own preview image and an RSS entry.
+- A case study page that lists its build log automatically
+- A proof strip where every number is computed from content or links to its source
+- Light and dark mode that follows the system, with a toggle and no flash of the wrong theme
+
+**What broke.**
+- **The first push failed** with "repository not found." The repo existed, but the credentials on my laptop couldn't see it. A private repo and a narrowly scoped token look exactly like a missing repo.
+- **The first palette.** It looked fine in screenshots, but once I saw it live it read as LinkedIn blue. I swapped it for a violet-to-rose gradient the same day, with every text pair re-checked for contrast.
+- **A log page that painted twice.** The list rendered once as a fallback and then again after the JavaScript loaded, which made the page look slower than it was. Rendering it once and filtering it in place fixed that.
+- **Lighthouse that lied.** Scores on my laptop swung wildly between runs. The cause was a pile of leftover local servers, and an already busy machine. Performance now gets measured on the deployed site.
+
+**The number.** Five episodes, six build-log posts and one case study, all shipped from a written plan. Accessibility scored 100 on every page in every Lighthouse run.
+
+**Next.** The ShelfReady eval. Its headline number will land on the project card, the case study and the proof strip automatically.
