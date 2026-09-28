@@ -25,7 +25,8 @@ export default async function LogPage() {
 
   return (
     <main className="mx-auto w-full max-w-content px-gutter pt-10 pb-section sm:pt-16">
-      <h1 className="text-display font-semibold">Build log</h1>
+      <p className="eyebrow">Built in public</p>
+      <h1 className="mt-2 text-display font-semibold">Build log</h1>
       <p className="mt-4 max-w-prose text-lead text-muted-foreground">
         One post per episode: the product call, what I built, what broke, and
         the number.{" "}

@@ -29,10 +29,18 @@ export function ProjectCard({
     <article
       id={`project-${project.slug}`}
       className={cn(
-        "flex scroll-mt-8 flex-col rounded-xl border p-6",
-        planned ? "border-dashed" : "bg-card",
+        "relative flex scroll-mt-8 flex-col overflow-hidden rounded-xl border p-6",
+        planned
+          ? "border-dashed bg-card/40"
+          : "bg-card shadow-sm transition duration-200 hover:border-brand/40 hover:shadow-lg hover:shadow-brand/10 motion-safe:hover:-translate-y-0.5",
       )}
     >
+      {!planned && (
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-brand to-brand-2"
+        />
+      )}
       {/* The eval number leads once it exists; until then the status does. */}
       <div className="flex items-start justify-between gap-4">
         {project.headline && (

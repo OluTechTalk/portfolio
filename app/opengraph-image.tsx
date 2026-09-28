@@ -24,7 +24,7 @@ export default async function Image() {
           padding: 96,
           background: "#ffffff",
           color: "#0a0a0a",
-          borderTop: "16px solid #0f766e",
+          borderTop: "16px solid #8535ce",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse needs a plain img */}
@@ -50,7 +50,7 @@ export default async function Image() {
           <div style={{ fontSize: 40, color: "#525252", lineHeight: 1.3 }}>
             {site.title}
           </div>
-          <div style={{ fontSize: 28, color: "#0f766e", marginTop: 12 }}>
+          <div style={{ fontSize: 28, color: "#8535ce", marginTop: 12 }}>
             oluakele.com
           </div>
         </div>

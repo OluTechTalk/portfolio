@@ -8,7 +8,7 @@ const links = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t">
+    <footer className="border-t bg-band">
       <div className="mx-auto flex w-full max-w-content flex-col gap-4 px-gutter py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <ul className="flex flex-wrap gap-x-6 gap-y-2">
           {links.map((link) => (

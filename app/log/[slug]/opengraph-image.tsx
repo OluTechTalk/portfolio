@@ -33,10 +33,10 @@ export default async function Image({
           padding: "80px 96px",
           background: "#ffffff",
           color: "#0a0a0a",
-          borderTop: "16px solid #0f766e",
+          borderTop: "16px solid #8535ce",
         }}
       >
-        <div style={{ fontSize: 32, color: "#0f766e", display: "flex" }}>
+        <div style={{ fontSize: 32, color: "#8535ce", display: "flex" }}>
           {post
             ? `${projectName(post.project)} · ${formatEpisode(post.episode)}`
             : "Build log"}
