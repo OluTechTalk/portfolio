@@ -1,6 +1,6 @@
 # Portfolio v1: social posts
 
-Log post: https://oluakele.com/log/portfolio-ep05-v1 (live once `draft: false`)
+Log post: https://oluakele.com/log/portfolio-ep05-v1 (published 2026-09-29)
 
 ## LinkedIn
 
@@ -17,7 +17,7 @@ So I scoped it like a product:
 
 What broke:
 → My first push said "repository not found." The repo existed; my laptop's credentials just couldn't see it.
-→ My first color palette read as "LinkedIn blue" once I saw it live. It was gone the same day.
+→ My first color refresh read as "LinkedIn blue" in the preview screenshots. It never shipped.
 → Lighthouse on my laptop swung from 57 to 87 on the same page. The culprit was leftover local servers. Measure where the measurement is reliable.
 
 The PM lesson: ship the smallest public version, then let real feedback steer.

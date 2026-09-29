@@ -1,14 +1,15 @@
 ---
-draft: true
+draft: false
 slug: portfolio-ep05-v1
 project: portfolio
 episode: 5
 title: "Building my portfolio in public, in five episodes"
 date: 2026-09-28
 summary: "I built oluakele.com the same way I build products: small slices, a plan before each one, and a written log, from a coming-soon page to a site with a build log, a case study and proof that links to its sources."
-pmTakeaway: "Ship the smallest public version first, then let real feedback steer. The first palette read as \"LinkedIn\" to me once I saw it live, so it changed the same day."
+pmTakeaway: "Ship the smallest public version first, then let real feedback steer. The first color refresh read as \"LinkedIn\" to me in the preview screenshots, so it changed before it ever shipped."
 buildTakeaway: "Measure where the measurement is reliable. Local Lighthouse on a busy laptop swung from 57 to 87 on the same page, so performance gets checked on the deployed site."
-metric: "5 episodes, 6 build-log posts, 1 case study; accessibility 100 on every page"
+metric: "5 episodes, 6 ShelfReady build-log posts, 1 case study; accessibility 100 on every page"
+commit: "https://github.com/OluTechTalk/portfolio/commit/206401457336bc04c4771f2b012c950732c6fcd2"
 ---
 
 **The goal.** A portfolio that shows both halves of the job in under a minute: how I think about a problem as a PM, and proof that I build the thing myself. It also had to be the kind of thing I'd ship for a customer: fast, accessible, and easy to keep up to date, because every ShelfReady episode needs a place to land.
@@ -32,10 +33,10 @@ The other call was the content model. Project details and posts live in content 
 
 **What broke.**
 - **The first push failed** with "repository not found." The repo existed, but the credentials on my laptop couldn't see it. A private repo and a narrowly scoped token look exactly like a missing repo.
-- **The first palette.** It looked fine in screenshots, but once I saw it live it read as LinkedIn blue. I swapped it for a violet-to-rose gradient the same day, with every text pair re-checked for contrast.
+- **The first palette.** The first pass of the visual refresh leaned teal and blue, and in the preview screenshots it read as LinkedIn. I swapped it for a violet-to-rose gradient before it shipped, with every text pair re-checked for contrast.
 - **A log page that painted twice.** The list rendered once as a fallback and then again after the JavaScript loaded, which made the page look slower than it was. Rendering it once and filtering it in place fixed that.
 - **Lighthouse that lied.** Scores on my laptop swung wildly between runs. The cause was a pile of leftover local servers, and an already busy machine. Performance now gets measured on the deployed site.
 
-**The number.** Five episodes, six build-log posts and one case study, all shipped from a written plan. Accessibility scored 100 on every page in every Lighthouse run.
+**The number.** Five episodes, six ShelfReady build-log posts and one case study, all shipped from a written plan. Accessibility scored 100 on every page in every Lighthouse run.
 
 **Next.** The ShelfReady eval. Its headline number will land on the project card, the case study and the proof strip automatically.

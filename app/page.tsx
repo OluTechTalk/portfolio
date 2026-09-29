@@ -7,12 +7,7 @@ import { careerStats } from "@/content/career";
 import { earlierWork, projectName, projects } from "@/content/projects";
 import { howIWork, site } from "@/content/site";
 import { getCaseStudies } from "@/lib/case-studies";
-import {
-  countPostsByProject,
-  formatEpisode,
-  getLatestPost,
-  getPosts,
-} from "@/lib/log";
+import { countPostsByProject, formatEpisode, getPosts } from "@/lib/log";
 import { cn } from "@/lib/utils";
 import headshot from "@/public/headshot.jpg";
 
@@ -20,8 +15,7 @@ const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 const buttonSize = "h-11 px-5 text-base";
 
 export default async function Home() {
-  const [latest, logCounts, caseStudies, posts] = await Promise.all([
-    getLatestPost(),
+  const [logCounts, caseStudies, posts] = await Promise.all([
     countPostsByProject(),
     getCaseStudies(),
     getPosts(),
@@ -32,6 +26,9 @@ export default async function Home() {
   const featured = projects
     .filter((p) => p.featured !== false)
     .sort((a, b) => a.order - b.order);
+  // "Now building" follows the featured projects, not posts about this site.
+  const featuredSlugs = new Set(featured.map((p) => p.slug));
+  const latest = posts.find((p) => featuredSlugs.has(p.project));
   const countStatus = (status: string) =>
     featured.filter((p) => p.status === status).length;
 
