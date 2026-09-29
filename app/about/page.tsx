@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 // Draft bio from the positioning in CLAUDE.md; Olu will edit.
 const bio = [
-  "I'm a product manager by trade, and I work as a forward deployed product manager: the space between a forward deployed engineer and a product manager. I've led product at Visual Comfort & Co., Zillow and Spreetail, across growth, marketplaces and e-commerce catalogs.",
+  "I'm a product manager by trade, and I work as a forward deployed product manager: the space between a forward deployed engineer and a product manager. I've led product at Visual Comfort & Co., Zillow, Spreetail and Arcadis, across growth, real estate marketplaces, e-commerce logistics and infrastructure software.",
   "On the product side, I start with the customer. I frame the problem, set the strategy, decide what not to build, and run the roadmap, writing down every trade-off so the reasoning survives the meeting.",
   "On the builder side, I ship the system myself, inside the messy real-world setup it has to work in, and prove it works with evals: known answers, measured before and after. I document every step in public, and the build log is the receipts.",
 ];

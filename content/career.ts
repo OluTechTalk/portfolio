@@ -1,7 +1,10 @@
-// Career stats for the home proof strip. Each one comes from Olu's résumé
-// (the version shared 2026-09-28) and carries its role and years. They link to
-// LinkedIn, the public source, because the résumé itself isn't published.
-// Adding another résumé's numbers: check they agree with these first.
+// Career stats for the home proof strip, each with its role and years. They
+// link to LinkedIn, the public source, because the résumé itself isn't
+// published (it contains a phone number and home address).
+//
+// Source of truth (Olu's call): the résumé shared 2026-09-28. Other résumé
+// versions only add what that one omits (the Spreetail fulfillment scope and
+// the Arcadis role); prefer bullets that repeat across versions.
 
 export type CareerStat = {
   value: string; // the number, as shown
@@ -32,5 +35,19 @@ export const careerStats: CareerStat[] = [
     role: "Senior Product Manager",
     company: "Spreetail",
     years: "2021–2022",
+  },
+  {
+    value: "$400M+",
+    label: "logistics operation run on AI-powered fulfillment across 7 distribution centers",
+    role: "Senior Product Manager",
+    company: "Spreetail",
+    years: "2021–2022",
+  },
+  {
+    value: "−10%",
+    label: "costs on $31M in financials managed and forecast",
+    role: "Senior Manager, Product Management",
+    company: "Arcadis",
+    years: "2017–2021",
   },
 ];
