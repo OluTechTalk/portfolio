@@ -1,0 +1,37 @@
+---
+draft: true
+slug: shelfready-ep07-playground
+project: shelfready
+episode: 7
+title: "A public AI shopping demo that can't run up a bill or show an error"
+date: 2026-09-30
+summary: "I put a live AI shopping agent on a public page, then designed for the two ways a public demo fails: it costs too much, or a visitor hits an error. Both ended up with a hard answer."
+pmTakeaway: "A public demo is a product with a budget. Decide the worst-case spend and what a visitor sees when you hit it before launch, not after the first bill."
+buildTakeaway: "Test protection in the deployed bundle, not in a script. A variable named `global` turned the rate limiter off, and only once the code was bundled."
+metric: "≈ $0.0014 per typical answer; ≤ $0.50 a day worst case"
+commit: "https://github.com/OluTechTalk/shelfready/commit/567cc0ca81115a65ab70c1a0e269adc898b8f982"
+---
+
+**The goal.** The eval in Episode 06 proved an agent can shop the fixed catalog. But a hiring manager or a merchant shouldn't have to read a results table to see that. They should be able to type "3-season tent for 2" and watch an agent find it, check stock and hand back a real checkout link. So this episode built `/playground`: a public chat with the shopping agent, using the same tools as the MCP server.
+
+**The product call.** A public page that calls a paid model has two ways to fail. It can cost too much, or a visitor can hit an error. I designed for both up front.
+
+**Cost has a ceiling.** Each visitor gets 10 messages per 10 minutes, and the whole site gets 200 a day. That puts the worst case at about $0.50 a day.
+
+**Errors aren't an option.** When either limit is hit, when demo mode is on, or when no limiter is configured, the chat plays a recorded replay of a real session instead. Replays are labeled "Recorded replay" and render exactly like a live chat, tool cards included, so there's no separate demo UI to maintain. I also chose real Shopify carts, like the MCP server, so the checkout link a visitor gets actually works.
+
+**What I built.**
+- A chat API that streams the agent with the four shopping tools, capped at 8 steps and 500 characters, and logs every live call with its cost
+- Per-visitor and site-wide limits that fall back to replays instead of failing
+- Demo replays: the first live answer to each suggested prompt, saved as its exact stream and checked by a person before it ships
+- The `/playground` page: tool steps as cards (search filters, product cards, live stock, a "Go to Shopify checkout" button), suggested prompts, and shareable `?q=` links
+- A `/status` check that shows whether rate limits are actually on
+
+**What broke.**
+- **The rate limiter was silently off.** A module-level variable named `global` shadowed Node's own global once the code was bundled, so 11 of 11 test requests went live. It worked in a plain script and only failed in the real build. Renamed, and the 11th request now gets a replay.
+- **A wrong answer almost became a demo.** "What's the warmest down sleeping bag?" came back with a 20°F bag, but the store has 0°F bags. Search returns the 5 most relevant results, not the extreme one, so "warmest", "lightest" and "cheapest" questions are unreliable. I deleted the replay, swapped in a prompt I could verify, and logged a sort option for search as a follow-up.
+- **Production had no rate-limit keys.** The playground correctly fell back to replays, but the MCP endpoint, which failed open, was unthrottled in production with nothing on `/status` saying so. The keys went in, `/status` checks them now, and the next evening the MCP endpoint was changed to fail closed too.
+
+**The number.** 28 live model calls during building and testing cost $0.019 in total. A typical first answer is about 3.3k tokens, or roughly $0.0014. Even at the 200-message daily cap, the worst case is about $0.50 a day.
+
+**Next.** Episode 08: ship it. The case study, a Loom walkthrough and the launch post, plus the Groq results on `/eval` when its background run finishes.
