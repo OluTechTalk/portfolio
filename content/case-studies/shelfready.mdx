@@ -2,8 +2,8 @@
 draft: false
 slug: shelfready
 project: shelfready
-summary: "An in-progress case study: auditing a Shopify catalog for AI shopping agents, fixing it with a human in the loop, and letting a real agent shop it, with the before/after eval still to come."
-updated: 2026-09-28
+summary: "Auditing a Shopify catalog for AI shopping agents, fixing it with a human in the loop, and measuring 360 agent shopping sessions before and after, where the biggest lever turned out to be the agent's tools, not just the data."
+updated: 2026-09-30
 ---
 
 import { BeforeAfter } from "@/components/case-study/before-after";
@@ -28,7 +28,7 @@ What I chose not to build, and why:
 
 The demo store is seeded rather than scraped. A deterministic generator built 150 products and injected 8 kinds of defects into 50 of them, so every audit and eval is scored against an exact answer key.
 
-## What I built (so far)
+## What I built
 
 <ShelfReadyArchitecture />
 
@@ -37,6 +37,7 @@ The demo store is seeded rather than scraped. A deterministic generator built 15
 - **P2 Audit:** a rubric of seven checks, category detection from the product's own data (150/150 correct), one model call per product that must quote its evidence, and an `/audit` page.
 - **P3 Fixer:** rule-based and grounded model fixes, a `/review` queue (anyone can view, only an admin can change), write-back to Shopify, and a before/after view.
 - **P4 MCP:** `search_products`, `get_product`, `check_availability` and `create_cart` on a public, rate-limited endpoint, tested end to end with Claude.
+- **P5 Eval + demo:** 60 shopping tasks with verified answers, run 3 times per catalog by an agent using the same tools as the live server, with an `/eval` page showing every transcript. Plus a public `/playground` where anyone can chat with the shopping agent: rate-limited, capped at 200 messages a day, and falling back to recorded replays of real sessions instead of an error.
 
 ## Key decisions & trade-offs
 
@@ -46,25 +47,31 @@ The demo store is seeded rather than scraped. A deterministic generator built 15
 - **Duplicate variants go to the merchant.** Deleting a variant moves inventory and can break orders, which isn't a call the fixer should make.
 - **Search on the synced copy, stock and carts live.** Shopify's storefront search can't filter on the structured attributes the fixer improved. *Trade-off:* search is only as fresh as the last sync.
 - **A public MCP endpoint, rate-limited, with no login.** Anyone can connect an agent to the demo. The tools are read-only except cart creation, which takes no payment or customer data.
+- **Fix the agent's tools, not just the data.** The first fair eval run failed mostly on tool behavior, on both catalogs: search dropped numbers, so "6 person tent" returned the cheapest tents, and invented attribute names silently matched nothing. I fixed the tools mid-eval. *Trade-off:* every earlier run was discarded, so before and after always use the same tool version.
+- **Repeat every eval 3 times.** At 40 tasks, one task is 2.5 points, and the same model varies run to run. *Trade-off:* 3× the cost, still only about $1 for a clean run.
+- **A live demo with a budget.** The playground spends real money, so it has a hard daily ceiling (about $0.50 at worst) and falls back to recorded real sessions, so visitors never see an error.
 
 ## Results
 
-The headline result, agent shopping success before vs after, **isn't in yet**. The eval is built: 40 shopping tasks with ground-truth answers, and a runner that uses the same model and tools on the original messy catalog and on the fixed one. The first run and its numbers will be the next episode.
-
-What's measured so far is the **catalog audit**, using the same rubric and the same model before and after the fixes:
+**The headline: an AI agent bought 0 wrong products in 360 shopping sessions**, while the catalog's readiness score went from 94.1 to 98.3. The eval ran 60 shopping tasks, 3 times each, on the original messy catalog and on the fixed one, using the same model (Gemini 3.5 Flash-Lite) and the same tools.
 
 <BeforeAfter
   stats={[
     { label: "Store readiness score", before: "94.1", after: "98.3" },
     { label: "Products agent-ready", before: "78%", after: "99.3%" },
     { label: "Products not ready", before: "11", after: "0" },
+    { label: "Agent shopping success", before: "98.9%", after: "99.4%" },
+    { label: "Wrong product bought", before: "0%", after: "0%" },
+    { label: "Tokens per shopping task", before: "9,773", after: "9,370" },
   ]}
-  caption="Audit before and after the review queue: 101 fixes applied (1 edited), 2 rejected, 15 left for the merchant. Source: Episode 04."
+  caption="Audit: same rubric and model before and after the review queue (105 fixes applied, 2 rejected, 15 left for the merchant). Eval: 60 tasks × 3 runs per catalog. Sources: Episodes 04–06."
 />
 
-Messy products averaged 82.4 before and 94.9 after, and clean products stayed at 100. One caveat: the clean products score exactly 100 because the generator makes them perfect, and a real catalog won't. That's why the audit number isn't the headline. The eval is.
+**The finding: agent-readiness is data *and* tools.** Before I fixed the agent-facing search tool, the first fair run scored 95% on the messy catalog and 92.5% on the fixed one. Fixing it moved both catalogs to 97.5–100%. With good tools, a capable agent absorbed most of the catalog mess. The few remaining failures all trace to missing or damaged facts. One of them is a product whose weight is still a merchant gap, and the agent declined rather than guess.
 
-In a live test, Claude went from *"waterproof hiking boots, men's 10, under $150"* to a working checkout link in 7 tool calls. There was no boot under budget, so it offered the closest match: a waterproof hiking shoe at $115.95.
+**What this doesn't show yet.** The success rate barely moved (98.9% → 99.4%) because many tasks have 2–4 correct products, so an agent can route around one damaged listing. Single-answer tasks would separate the two catalogs more sharply. The clean products also score exactly 100 on the audit because the generator makes them perfect, which a real catalog won't.
+
+In a live test through the MCP connector, Claude went from *"waterproof hiking boots, men's 10, under $150"* to a working checkout link in 7 tool calls. There was no boot under budget, so it offered the closest match: a waterproof hiking shoe at $115.95.
 
 ## What broke
 
@@ -75,10 +82,13 @@ In a live test, Claude went from *"waterproof hiking boots, men's 10, under $150
 - **A fixer running on a stale audit.** It drafted 11 rewrites of descriptions that were already fixed. They were deleted before review, and the fixer now refuses stale products.
 - **An invisible store.** Products were Active but not published to a sales channel, so the Storefront API saw nothing. Active isn't the same as published.
 - **"Lynx 30f."** The fixer had treated the product's URL handle as evidence, so a bad spec looked grounded. Specs must now match the product's own text in number and unit. A re-check of all 50 live fixes found 3 wrong, and all 3 were corrected.
+- **An eval harness bug.** Stand-in product ids for the messy catalog were longer than the tools allow, so on long-named products the agent found the item but couldn't add it to the cart. That unfairly lowered "before". I found it from a crash, fixed the ids, and discarded the flawed run.
+- **A model outage.** Gemini's free tier returned "high demand" errors and 115-second calls for hours. Moving to the paid tier cost about $1.54 for the whole eval, including discarded runs.
 
 ## Roadmap
 
-- **P5 Eval + demo:** run the 40 tasks on the messy and the fixed catalog and report success rate, steps, wrong-product rate and cost per task. Then add the before/after chart and a demo mode to the app.
-- **Model comparison:** the same 40 tasks on Gemini, an open model on Groq and Claude, reporting success rate against cost per task.
-- **P6 Ship:** finish this case study with the headline number, record a Loom walkthrough, and write the launch post.
-- **Known rough edges:** drafted descriptions can only answer what the data covers, and free-text search is loose without structured filters.
+- **P6 Ship:** record a Loom walkthrough and write the launch post.
+- **Second model:** Groq's gpt-oss-120b is running the same eval on its free tier, and its results go on `/eval` when it finishes.
+- **Sharper tasks:** add single-answer tasks so the eval can separate a messy catalog from a fixed one more clearly.
+- **Search sort option:** questions like "warmest" or "lightest" need sorting, not just relevance. One recorded demo answer got this wrong and was replaced before it shipped.
+- **Known rough edges:** drafted descriptions can only answer what the data covers, and some attribute gaps still need the merchant.

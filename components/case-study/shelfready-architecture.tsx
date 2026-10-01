@@ -94,7 +94,7 @@ export function ShelfReadyArchitecture() {
         ))}
       </div>
       <figcaption className="mt-3 text-sm text-muted-foreground">
-        ShelfReady so far (P0–P4). Search reads the synced copy because it has
+        ShelfReady through P5. Search reads the synced copy because it has
         the structured attributes; stock and carts always go to Shopify live.
       </figcaption>
     </figure>

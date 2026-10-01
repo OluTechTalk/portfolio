@@ -45,10 +45,10 @@ export default async function Home() {
       href: "/log",
     },
     ...featured
-      .filter((p) => p.headline && caseStudyHrefs[p.slug])
+      .filter((p) => p.proofStat && caseStudyHrefs[p.slug])
       .map((p) => ({
-        value: p.headline as string,
-        label: `${projectName(p.slug)} headline eval result`,
+        value: p.proofStat!.value,
+        label: p.proofStat!.label,
         href: caseStudyHrefs[p.slug],
       })),
   ];

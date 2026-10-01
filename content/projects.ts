@@ -5,6 +5,7 @@ export type Project = {
   customer: string; // who it's for, e.g. "Shopify merchants selling to AI shopping agents"
   status: "shipped" | "in-progress" | "planned";
   headline?: string; // the eval number, e.g. "Agent shopping success 41% → 88%"
+  proofStat?: { value: string; label: string }; // short form for the home proof strip
   tags: string[]; // "MCP", "Shopify", "Evals", "Product strategy", ...
   demoUrl?: string;
   repoUrl?: string;
@@ -40,8 +41,13 @@ export const projects: Project[] = [
       "Makes a Shopify catalog clean and structured enough for AI shopping agents to find, compare and buy from.",
     customer: "Shopify merchants selling to AI shopping agents",
     status: "in-progress",
+    headline: "0 wrong products in 360 agent sessions · readiness 94.1 → 98.3",
+    proofStat: {
+      value: "0",
+      label: "wrong products bought in 360 ShelfReady agent eval sessions",
+    },
     tags: ["MCP", "Shopify", "Evals", "Product strategy"],
-    demoUrl: "https://shelfready-ashen.vercel.app",
+    demoUrl: "https://shelfready-ashen.vercel.app/playground",
     repoUrl: "https://github.com/OluTechTalk/shelfready",
     caseStudy: "shelfready",
     order: 1,

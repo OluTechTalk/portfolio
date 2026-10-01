@@ -1,0 +1,39 @@
+---
+draft: true
+slug: shelfready-ep06-eval
+project: shelfready
+episode: 6
+title: "360 agent shopping sessions, 0 wrong products, and a finding I didn't expect"
+date: 2026-09-29
+summary: "I had an AI agent run 60 shopping tasks, 3 times each, on the messy catalog and the fixed one. It never bought a wrong product, and the biggest gain came from fixing its search tool, not the data."
+pmTakeaway: "Measure the whole path to the customer, not just the part you built. The catalog was my product, but the agent's search tool turned out to be the bigger lever."
+buildTakeaway: "Run evals more than once, and audit the harness as hard as the system. At 40 tasks one task is 2.5 points, and a harness bug quietly made \"before\" look worse."
+metric: "0 wrong products in 360 sessions; success 98.9% → 99.4%"
+commit: "https://github.com/OluTechTalk/shelfready/commit/7a7d3d5aafe4ed8dbd4531d5617688951506402c"
+---
+
+**The goal.** This was the episode the whole project was built for. Episodes 01–05 cleaned the catalog and gave agents tools to shop it. Now I had to show whether a cleaner catalog actually changes what an AI shopping agent does. The test: the same shopping tasks, on the original messy catalog and on the fixed one, using the same model and the same tools.
+
+**The product call.** Three calls shaped what the number means.
+
+**Score against the truth, not the catalog.** Each of the 60 tasks is a natural shopper request with verified answers, taken from the clean catalog the generator wrote before it injected any defects. 40 are standard tasks; 20 are an attribute tier, where the deciding fact (weight, fill power, waterproof rating) only exists in a structured field.
+
+**Repeat every run 3 times.** At 40 tasks, one task is 2.5 points, and the same model varies from run to run. A single run can't tell a real gap from noise, so the eval of record is 60 tasks × 3 runs per catalog: 360 sessions.
+
+**Fix the tools when they're the problem.** The first fair run surprised me. The messy catalog scored 95% and the fixed one 92.5%, and most failures had nothing to do with the data. Search dropped numbers, so "6 person tent" returned the cheapest tents. Invented attribute names silently matched nothing. I fixed the tools, which also go to every real agent using the live server, and threw away every run made with the old version.
+
+**What I built.**
+- 60 shopping tasks with verified answers, plus a runner that drives an agent through the same tools and wording as the live MCP server
+- Runs that resume after a crash, save after every task, and stop themselves when errors pile up
+- An `/eval` page: the before → after headline, outcome bars with the run-to-run spread, and every task's transcript side by side
+- Smaller tool results (search output −53%), which cut the tokens each task costs
+- A second model, Groq's gpt-oss-120b, running the same eval for free in the background
+
+**What broke.**
+- **Gemini's free tier went down** for hours: "high demand" errors and 115-second calls. The paid tier fixed it, at $1.54 for everything including discarded runs.
+- **A low-memory kill** left orphaned processes, and 74 of 80 tasks in that run errored. That's why runs now resume and have a circuit breaker.
+- **A harness bug that flattered me.** Stand-in product ids for the messy catalog were longer than the tools allow. On long-named products the agent found the item but couldn't add it to the cart, which unfairly lowered "before". A crash exposed it, and the flawed run was discarded.
+
+**The number.** Over 360 sessions, the agent bought **0 wrong products** on either catalog. Success went from 98.9% to 99.4%, and tokens per task fell from 9,773 to 9,370. After the tool fix, single runs scored 97.5–100% on both catalogs. Honestly, the success rate barely moved, because many tasks have 2–4 correct products, so an agent can route around one damaged listing. The one failure on the fixed catalog was a sleeping bag whose weight is still a merchant gap, and the agent declined rather than guess.
+
+**Next.** Episode 07: a public playground where anyone can chat with the shopping agent, with a budget and recorded replays so it never errors.
