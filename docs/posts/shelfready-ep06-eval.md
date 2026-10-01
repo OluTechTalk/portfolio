@@ -1,6 +1,6 @@
 # ShelfReady Episode 06: social posts
 
-Log post: https://oluakele.com/log/shelfready-ep06-eval (live once `draft: false`)
+Log post: https://oluakele.com/log/shelfready-ep06-eval (published 2026-10-01)
 
 ## LinkedIn
 
