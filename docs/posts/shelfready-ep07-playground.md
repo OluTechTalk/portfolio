@@ -1,6 +1,6 @@
 # ShelfReady Episode 07: social posts
 
-Log post: https://oluakele.com/log/shelfready-ep07-playground (live once `draft: false`)
+Log post: https://oluakele.com/log/shelfready-ep07-playground (published 2026-10-01)
 
 ## LinkedIn
 
