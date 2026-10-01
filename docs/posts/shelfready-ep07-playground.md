@@ -26,7 +26,7 @@ Build log: https://oluakele.com/log/shelfready-ep07-playground
 
 ## Short post
 
-A live AI shopping agent on a public page: a hard budget (~$0.50/day worst case) and recorded replays instead of errors. The bug that almost slipped: a variable named `global` disabled the rate limiter, but only in the bundled build. https://oluakele.com/log/shelfready-ep07-playground
+A live AI shopping agent on a public page: a hard budget (~$0.50/day max) and recorded replays instead of errors. The bug that almost slipped: a variable named `global` disabled the rate limiter, only in the bundled build. https://oluakele.com/log/shelfready-ep07-playground
 
 ## Visual
 
