@@ -1,11 +1,23 @@
+// Site-wide copy and links. Positioning (Olu, Oct 17): an AI builder who uses
+// AI to build solutions that multiply output and solve real customer needs.
 export const site = {
   name: "Olu Akele",
-  title: "Forward deployed product manager · AI product builder",
+  firstName: "Olu",
+  lastName: "Akele",
+  title: "AI product builder",
+  roleLead: "I build AI that",
+  roleEmphasis: "multiplies output",
   description:
-    "Olu Akele is a forward deployed product manager and AI product builder: framing the customer problem, shipping the AI that solves it, and proving it works with evals.",
+    "Olu Akele uses AI to build solutions that multiply what a team can ship, lift performance and solve real customer problems, then proves each one with evals.",
   url: "https://oluakele.com",
   pitch:
-    "I'm a product manager who builds. I work inside messy real-world systems (catalogs, APIs, databases), figure out what the customer needs, ship the AI that does it, and prove it works with evals. Every step is documented in public.",
+    "I use AI to build solutions that multiply what a team can ship, lift performance, and solve the customer problem in front of them. Every build is measured with evals and documented in public.",
+  focus: "AI-built products, agents, evals",
+  statement: {
+    before: "I use AI to build what a team couldn't ship alone, then prove it with an",
+    emphasis: "eval",
+    after: ", not a demo.",
+  },
   links: {
     linkedin: "https://www.linkedin.com/in/oluwaseye-akele/",
     github: "https://github.com/OluTechTalk",
@@ -14,29 +26,66 @@ export const site = {
   },
 } as const;
 
-
 export const nav = [
   { label: "Work", href: "/#work" },
-  { label: "Log", href: "/log" },
+  { label: "Process", href: "/#process" },
   { label: "About", href: "/about" },
+  { label: "Index", href: "/#index" },
+  { label: "Log", href: "/log" },
+  { label: "Contact", href: "#contact" },
 ] as const;
 
-// Home "How I work": the PM half and the builder half, one line each.
-export const howIWork = [
+export const ticker = [
+  "Discovery",
+  "Agents",
+  "Evals",
+  "Roadmaps",
+  "Experiments",
+  "Launch",
+  "Retention",
+] as const;
+
+// The process rail: how a product gets run, one artifact per step.
+export const process = [
   {
-    title: "Frame the problem and the customer",
-    line: "Name who it's for and what they're stuck on, and write down what \"done\" looks like before any code.",
+    title: "Frame",
+    line: "Write the problem on one page: who is stuck, what it costs them, and which number should move.",
+    artifact: "one-page problem brief",
   },
   {
-    title: "Plan the roadmap and trade-offs",
-    line: "Decide what not to build, set the cost ceiling, and log every call with the trade-off it makes.",
+    title: "Discover",
+    line: "Read the real data and talk to the people in it before drawing anything. Listen for the sentence people repeat.",
+    artifact: "interview notes and tagged examples",
   },
   {
-    title: "Build the AI into the real system",
-    line: "Ship inside the messy system that already exists (catalogs, APIs, databases), not in a demo beside it.",
+    title: "Prototype",
+    line: "Build a working version in days with Claude Code, on real data, so the team argues about behavior and not slides.",
+    artifact: "working prototype",
   },
   {
-    title: "Prove it with evals, then iterate",
-    line: "Measure against known answers before and after, and let the number decide what comes next.",
+    title: "Evaluate",
+    line: "Agree the pass bar before building. Run the cases with known answers and review the failures by hand.",
+    artifact: "eval set and scorecard",
   },
+  {
+    title: "Ship",
+    line: "Roll out with a budget, a fallback and one metric named as the owner of the launch.",
+    artifact: "rollout plan and guardrails",
+  },
+  {
+    title: "Learn",
+    line: "Write down what broke, read the worst outputs, then double down, change course or stop.",
+    artifact: "build log and decision record",
+  },
+] as const;
+
+export const toolkit = [
+  "Claude Code",
+  "Claude API",
+  "MCP",
+  "Evals",
+  "Next.js",
+  "Python",
+  "SQL",
+  "Figma",
 ] as const;

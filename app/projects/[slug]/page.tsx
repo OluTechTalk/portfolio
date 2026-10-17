@@ -19,6 +19,7 @@ const statusLabel = {
   shipped: "Shipped",
   "in-progress": "In progress",
   planned: "Planned",
+  next: "Next",
 } as const;
 
 async function load(slug: string) {

@@ -1,335 +1,346 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { ProjectCard } from "@/components/project-card";
-import { buttonVariants } from "@/components/ui/button";
-import { careerStats } from "@/content/career";
+import { FitName } from "@/components/fit-name";
+import { PlateArt } from "@/components/plate-art";
+import { ProcessRail } from "@/components/process-rail";
+import { career } from "@/content/career";
 import { earlierWork, projectName, projects } from "@/content/projects";
-import { howIWork, site } from "@/content/site";
+import { process, site, ticker, toolkit } from "@/content/site";
 import { getCaseStudies } from "@/lib/case-studies";
-import { countPostsByProject, formatEpisode, getPosts } from "@/lib/log";
-import { cn } from "@/lib/utils";
-import headshot from "@/public/headshot.jpg";
+import { formatEpisode } from "@/lib/format";
+import { countPostsByProject } from "@/lib/log";
+import { getLatestFeaturedPost } from "@/lib/now-building";
+import heroPhoto from "@/public/photos/olu-hero.jpg";
+import aboutPhoto1 from "@/public/photos/olu-about-1.jpg";
+import aboutPhoto2 from "@/public/photos/olu-about-2.jpg";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
-const buttonSize = "h-11 px-5 text-base";
+const pad = (n: number) => String(n).padStart(2, "0");
+const statusLabel = {
+  shipped: "Shipped",
+  "in-progress": "Live",
+  planned: "Planned",
+  next: "Next",
+} as const;
 
 export default async function Home() {
-  const [logCounts, caseStudies, posts] = await Promise.all([
+  const [logCounts, caseStudies, latest] = await Promise.all([
     countPostsByProject(),
     getCaseStudies(),
-    getPosts(),
+    getLatestFeaturedPost(),
   ]);
-  const caseStudyHrefs = Object.fromEntries(
+  const caseStudyHref = Object.fromEntries(
     caseStudies.map((c) => [c.project, `/projects/${c.slug}`]),
   );
-  const featured = projects
-    .filter((p) => p.featured !== false)
-    .sort((a, b) => a.order - b.order);
-  // "Now building" follows the featured projects, not posts about this site.
-  const featuredSlugs = new Set(featured.map((p) => p.slug));
-  const latest = posts.find((p) => featuredSlugs.has(p.project));
-  const countStatus = (status: string) =>
-    featured.filter((p) => p.status === status).length;
 
-  // Proof strip: every number is computed from content and links to its source.
-  const buildStats = [
-    {
-      value: String(featured.length),
-      label: `projects (${countStatus("in-progress")} in progress, ${countStatus("planned")} planned)`,
-      href: "#work",
-    },
-    {
-      value: String(posts.length),
-      label: "episodes shipped and written up in public",
-      href: "/log",
-    },
-    ...featured
-      .filter((p) => p.proofStat && caseStudyHrefs[p.slug])
-      .map((p) => ({
-        value: p.proofStat!.value,
-        label: p.proofStat!.label,
-        href: caseStudyHrefs[p.slug],
-      })),
-  ];
+  const builds = projects
+    .filter((p) => p.featured !== false && p.build)
+    .sort((a, b) => (a.build ?? 0) - (b.build ?? 0));
+  const plated = builds.filter((p) => p.plate).slice(0, 4);
+  const shipped = builds.filter((p) => p.metric).length;
+  const queued = builds.length - shipped;
+  const nextUp = projects.filter((p) => p.status === "next");
+
+  const tickerItems = [...ticker, ...ticker];
 
   return (
-    <main className="w-full">
-      <section
-        id="intro"
-        className="mx-auto max-w-content scroll-mt-8 px-gutter pt-8 pb-14 sm:pt-14"
-      >
-        <div className="inline-block rounded-full bg-linear-to-br from-brand to-brand-2 p-1 shadow-lg shadow-brand/20">
-          <Image
-            src={headshot}
-            alt="Olu Akele, smiling, in a pink button-down shirt"
-            width={144}
-            height={144}
-            preload
-            placeholder="blur"
-            className="size-28 rounded-full border-4 border-background object-cover sm:size-36"
-          />
-        </div>
-        <h1 className="mt-8 text-display font-semibold">{site.name}</h1>
-        <div
-          aria-hidden
-          className="mt-4 h-1 w-16 rounded-full bg-linear-to-r from-brand to-brand-2"
-        />
-        <p className="mt-4 text-lg font-medium text-muted-foreground">
-          {site.title}
-        </p>
-        <p className="mt-6 max-w-prose text-lead">{site.pitch}</p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a
-            href="#work"
-            className={cn(
-              buttonVariants(),
-              buttonSize,
-              "bg-linear-to-r from-brand to-brand-2 text-brand-foreground shadow-md shadow-brand/25 hover:opacity-90",
-            )}
-          >
-            See the work
-          </a>
-          <a
-            href={site.links.booking}
-            {...external}
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              buttonSize,
-              "bg-card",
-            )}
-          >
-            Book a call
-          </a>
-          <a
-            href={site.links.linkedin}
-            {...external}
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              buttonSize,
-              "bg-card",
-            )}
-          >
-            LinkedIn
-          </a>
-        </div>
-      </section>
-
-      <section
-        id="now-building"
-        aria-label="Now building"
-        className="scroll-mt-8 border-y bg-band"
-      >
-        <p className="mx-auto flex max-w-content items-baseline gap-3 px-gutter py-5 text-muted-foreground">
-          <span
-            className="size-2 shrink-0 translate-y-[-1px] rounded-full bg-brand shadow-[0_0_0_4px] shadow-brand/20"
-            aria-hidden
-          />
-          <span>
-            <span className="font-medium text-foreground">Now building:</span>{" "}
-            {latest ? (
-              <Link
-                href={`/log/${latest.slug}`}
-                className="underline-offset-4 hover:text-brand hover:underline"
-              >
-                {projectName(latest.project)} ·{" "}
-                {formatEpisode(latest.episode)} · {latest.title}{" "}
-                <span aria-hidden>→</span>
-              </Link>
-            ) : (
-              "ShelfReady, an agent-ready storefront. Build log coming soon."
-            )}
-          </span>
-        </p>
-      </section>
-
-      <section
-        id="work"
-        className="mx-auto max-w-content scroll-mt-8 px-gutter py-section"
-        aria-labelledby="work-heading"
-      >
-        <p className="eyebrow">Selected work</p>
-        <h2 id="work-heading" className="mt-2 text-title font-semibold">
-          Work
-        </h2>
-        <p className="mt-3 text-muted-foreground">
-          Each project: the customer problem, what I built, and the eval number
-          that proves it.
-        </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          {featured.map((project) => (
-            <ProjectCard
-              key={project.slug}
-              project={project}
-              logCount={logCounts[project.slug] ?? 0}
-              caseStudyHref={caseStudyHrefs[project.slug]}
+    <main>
+      {/* 1. Hero */}
+      <section className="hero wrap" aria-labelledby="hero-name">
+        <div className="hero-top">
+          <div className="hero-name" id="hero-name">
+            <FitName first={site.firstName} last={site.lastName} />
+            <p className="role">
+              {site.roleLead} <span>{site.roleEmphasis}</span>
+            </p>
+          </div>
+          <div className="slot arch">
+            <Image
+              src={heroPhoto}
+              alt="Olu Akele smiling, arms crossed, in a cream polo against a pink backdrop"
+              fill
+              preload
+              placeholder="blur"
+              sizes="(max-width: 800px) 70vw, 340px"
+              style={{ objectPosition: "50% 30%" }}
             />
+          </div>
+        </div>
+        <div className="hero-foot">
+          <div className="hero-copy">
+            <p>{site.pitch}</p>
+            <div className="hero-cta">
+              <a href={site.links.booking} {...external} className="btn btn-solid">
+                Book a call ↗
+              </a>
+              <a href="#contact" className="btn">
+                Email me
+              </a>
+            </div>
+          </div>
+          <dl className="facts mono">
+            <div>
+              <dt>Focus</dt>
+              <dd>{site.focus}</dd>
+            </div>
+            {latest && (
+              <div>
+                <dt>Now building</dt>
+                <dd>
+                  <Link href={`/log/${latest.slug}`}>
+                    {projectName(latest.project)} · {formatEpisode(latest.episode)}
+                  </Link>
+                </dd>
+              </div>
+            )}
+          </dl>
+          <svg className="badge" viewBox="0 0 160 160" role="img" aria-label="Scroll down for the work">
+            <defs>
+              <path id="badge-circle" d="M80 80 m-62 0 a62 62 0 1 1 124 0 a62 62 0 1 1 -124 0" />
+            </defs>
+            <g className="spin">
+              <text>
+                <textPath href="#badge-circle" textLength="385" lengthAdjust="spacing">
+                  {`SCROLL FOR THE WORK * ${shipped} SHIPPED * ${queued} NEXT *`}
+                </textPath>
+              </text>
+            </g>
+            <path
+              d="M80 62 v36 m-14 -14 l14 14 l14 -14"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="none"
+              strokeLinecap="square"
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* 2. Ticker */}
+      <div className="ticker" aria-hidden>
+        <div className="track">
+          {tickerItems.map((word, i) => (
+            <span key={i}>
+              {word}
+              <i>/</i>
+            </span>
           ))}
         </div>
+      </div>
 
-        {earlierWork.length > 0 && (
-          <div className="mt-12">
-            <h3 className="text-sm font-semibold text-muted-foreground">
-              Earlier work
-            </h3>
-            <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-              {earlierWork.map((item) => (
-                <li
-                  key={item.name}
-                  className="rounded-lg border border-dashed px-4 py-3"
-                >
-                  <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-medium">
-                    {item.name}
-                    <span className="rounded-full border px-2 py-0.5 text-xs font-normal text-muted-foreground">
-                      {item.note}
+      {/* 3. Case studies */}
+      <section className="section wrap" id="work" aria-labelledby="work-heading">
+        <div className="sec-head">
+          <h2 className="display" id="work-heading">
+            Case studies
+          </h2>
+          <span className="mono">
+            {shipped} shipped, {queued} in the queue. Real numbers only
+          </span>
+        </div>
+        <div className="plates">
+          {plated.map((p, i) => {
+            const href = caseStudyHref[p.slug];
+            const logs = logCounts[p.slug] ?? 0;
+            return (
+              <figure key={p.slug} className={`plate p${i + 1} rv`}>
+                <div className={`frame ${p.plate!.color}`}>
+                  <div className="tag">
+                    <b>{p.metric?.value ?? "Planned"}</b>
+                    <span>{p.metric?.label ?? `Build ${pad(p.build!)}`}</span>
+                  </div>
+                  <PlateArt artifact={p.plate!.artifact} />
+                </div>
+                <figcaption>
+                  <div className="cap-top">
+                    <h3>{href ? <Link href={href}>{projectName(p.slug)}</Link> : projectName(p.slug)}</h3>
+                    <span className="mono">
+                      Build {pad(p.build!)} · {statusLabel[p.status]}
                     </span>
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {item.oneLiner}
-                  </p>
+                  </div>
+                  <span className="mono meta">{p.meta}</span>
+                  <dl className="cf">
+                    <div>
+                      <dt className="mono">Problem</dt>
+                      <dd>{p.problem}</dd>
+                    </div>
+                    <div>
+                      <dt className="mono">Bet</dt>
+                      <dd>{p.bet}</dd>
+                    </div>
+                    <div>
+                      <dt className="mono">Result</dt>
+                      <dd>{p.result}</dd>
+                    </div>
+                  </dl>
+                  {(href || p.demoUrl || logs > 0) && (
+                    <div className="plate-links mono">
+                      {href && <Link href={href}>Case study</Link>}
+                      {p.demoUrl && (
+                        <a href={p.demoUrl} {...external}>
+                          Live demo ↗
+                        </a>
+                      )}
+                      {logs > 0 && (
+                        <Link href={`/log?project=${p.slug}`}>
+                          {logs} log {logs === 1 ? "post" : "posts"}
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </figcaption>
+              </figure>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 4. Statement + process rail */}
+      <div className="spikes" aria-hidden />
+      <section className="statement section" id="process" aria-label="How I work">
+        <div className="wrap">
+          <p className="big rv">
+            {site.statement.before} <em>{site.statement.emphasis}</em>
+            {site.statement.after}
+          </p>
+          <p className="rail-label mono">How I run a product. Pick a step</p>
+          <ProcessRail steps={process} />
+          <div className="toolkit mono">
+            {toolkit.map((t) => (
+              <span key={t}>{t}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. About strip */}
+      <section className="section wrap" id="about" aria-labelledby="about-heading">
+        <div className="about">
+          <div className="about-text">
+            <h2 className="display" id="about-heading">
+              About
+            </h2>
+            <p>
+              Product leader at Visual Comfort &amp; Co., Zillow, Spreetail and
+              Arcadis. Now I build the AI myself: ship it inside the real
+              system, measure it, and write down what broke.
+            </p>
+            <Link href="/about" className="btn">
+              More about me
+            </Link>
+          </div>
+          <div className="slot">
+            <Image
+              src={aboutPhoto1}
+              alt="Olu Akele smiling, one hand resting on his arm"
+              fill
+              placeholder="blur"
+              sizes="(max-width: 800px) 50vw, 33vw"
+              style={{ objectPosition: "50% 25%" }}
+            />
+          </div>
+          <div className="slot">
+            <Image
+              src={aboutPhoto2}
+              alt="Olu Akele seated at a table, hands clasped"
+              fill
+              placeholder="blur"
+              sizes="(max-width: 800px) 50vw, 33vw"
+              style={{ objectPosition: "50% 30%" }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Proof */}
+      <section className="section wrap proof" id="proof" aria-labelledby="proof-heading">
+        <div className="sec-head">
+          <h2 className="display" id="proof-heading">
+            Proof
+          </h2>
+          <span className="mono">Selected results from my product roles</span>
+        </div>
+        {career.map((r) => (
+          <div key={r.company} className="proof-group rv">
+            <div className="proof-role mono">
+              <span className="proof-company">{r.company}</span>
+              <span>
+                {r.role} · {r.years}
+              </span>
+              <a href={site.links.linkedin} {...external} className="u-link">
+                Source: LinkedIn ↗
+              </a>
+            </div>
+            <ul className="ruled">
+              {r.results.map((x) => (
+                <li key={x.value + x.text.slice(0, 12)}>
+                  <div className="row">
+                    <span className="num">{x.value}</span>
+                    <span className="proof-text">{x.text}</span>
+                  </div>
                 </li>
               ))}
             </ul>
           </div>
-        )}
+        ))}
       </section>
 
-      <section
-        id="how-i-work"
-        aria-labelledby="how-heading"
-        className="scroll-mt-8 border-y bg-band"
-      >
-        <div className="mx-auto max-w-content px-gutter py-section">
-          <p className="eyebrow">Product + build</p>
-          <h2 id="how-heading" className="mt-2 text-title font-semibold">
-            How I work
+      {/* 7. Index */}
+      <section className="section wrap" id="index" aria-labelledby="index-heading">
+        <div className="sec-head">
+          <h2 className="display" id="index-heading">
+            Index
           </h2>
-          <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {howIWork.map((step, i) => (
-              <li key={step.title} className="rounded-xl border bg-card p-5">
-                <span className="bg-linear-to-r from-brand to-brand-2 bg-clip-text text-sm font-semibold text-transparent">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-2 font-semibold tracking-tight">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">{step.line}</p>
+          <span className="mono">Builds, done and planned</span>
+        </div>
+        <ul className="ruled">
+          {builds.map((p) => {
+            const href = caseStudyHref[p.slug];
+            const out = p.metric
+              ? `${p.metric.value} / ${p.metric.label}`
+              : statusLabel[p.status];
+            const cells = (
+              <>
+                <span className="mono">{pad(p.build!)}</span>
+                <span className="name">{projectName(p.slug)}</span>
+                <span className="what">{p.kind}</span>
+                <span className="out mono">{out}</span>
+              </>
+            );
+            return (
+              <li key={p.slug} className="rv">
+                {href ? (
+                  <Link href={href} className="row">
+                    {cells}
+                  </Link>
+                ) : (
+                  <div className={`row hoverable ${p.metric ? "" : "planned"}`}>{cells}</div>
+                )}
               </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section
-        id="proof"
-        aria-labelledby="proof-heading"
-        className="mx-auto max-w-content scroll-mt-8 px-gutter py-section"
-      >
-        <p className="eyebrow">Proof</p>
-        <h2 id="proof-heading" className="mt-2 text-title font-semibold">
-          Numbers, with sources
-        </h2>
-        <p className="mt-3 text-muted-foreground">
-          Every number links to where it comes from.
-        </p>
-
-        <h3 className="mt-8 text-sm font-semibold text-muted-foreground">
-          Building in public
-        </h3>
-        <ul className="mt-3 grid gap-3 sm:grid-cols-3">
-          {buildStats.map((stat) => (
-            <li key={stat.label}>
-              <Link
-                href={stat.href}
-                className="group block h-full rounded-xl border bg-card p-5 transition hover:border-brand/50"
-              >
-                <span className="block text-3xl font-semibold tracking-tight">
-                  {stat.value}
-                </span>
-                <span className="mt-1 block text-sm text-muted-foreground group-hover:text-foreground">
-                  {stat.label} <span aria-hidden>→</span>
-                </span>
-              </Link>
+            );
+          })}
+          {nextUp.map((p) => (
+            <li key={p.slug} className="rv">
+              <div className="row hoverable planned">
+                <span className="mono">Next</span>
+                <span className="name">{p.title}</span>
+                <span className="what">{p.kind}</span>
+                <span className="out mono">Planned</span>
+              </div>
+            </li>
+          ))}
+          {earlierWork.map((w) => (
+            <li key={w.name} className="rv">
+              <div className="row hoverable planned">
+                <span className="mono">Earlier</span>
+                <span className="name">{w.name}</span>
+                <span className="what">{w.kind}</span>
+                <span className="out mono">{w.note}</span>
+              </div>
             </li>
           ))}
         </ul>
-
-        <h3 className="mt-10 text-sm font-semibold text-muted-foreground">
-          Product career
-        </h3>
-        <ul className="mt-3 grid gap-3 sm:grid-cols-3">
-          {careerStats.map((stat) => (
-            <li key={stat.label}>
-              <a
-                href={site.links.linkedin}
-                {...external}
-                className="group block h-full rounded-xl border bg-card p-5 transition hover:border-brand/50"
-              >
-                <span className="block text-3xl font-semibold tracking-tight">
-                  {stat.value}
-                </span>
-                <span className="mt-1 block text-sm">{stat.label}</span>
-                <span className="mt-3 block text-xs text-muted-foreground group-hover:text-foreground">
-                  {stat.role}, {stat.company} · {stat.years}
-                  <span className="sr-only"> (source: LinkedIn)</span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section
-        id="contact"
-        aria-labelledby="contact-heading"
-        className="mx-auto max-w-content scroll-mt-8 px-gutter pb-section"
-      >
-        <div className="rounded-2xl bg-linear-to-br from-brand to-brand-2 p-px shadow-lg shadow-brand/10">
-          <div className="rounded-[calc(1rem-1px)] bg-card px-6 py-10 sm:px-10">
-            <p className="eyebrow">Contact</p>
-            <h2 id="contact-heading" className="mt-2 text-title font-semibold">
-              Let&apos;s talk
-            </h2>
-            <p className="mt-3 max-w-prose text-muted-foreground">
-              Hiring a PM who can also build and ship the AI? I&apos;d like to
-              hear about the problem.
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={`mailto:${site.links.email}`}
-                className={cn(
-                  buttonVariants(),
-                  buttonSize,
-                  "bg-linear-to-r from-brand to-brand-2 text-brand-foreground shadow-md shadow-brand/25 hover:opacity-90",
-                )}
-              >
-                Email me
-              </a>
-              <a
-                href={site.links.booking}
-                {...external}
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  buttonSize,
-                  "bg-card",
-                )}
-              >
-                Book a call
-              </a>
-              <a
-                href={site.links.linkedin}
-                {...external}
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  buttonSize,
-                  "bg-card",
-                )}
-              >
-                LinkedIn
-              </a>
-            </div>
-          </div>
-        </div>
       </section>
     </main>
   );

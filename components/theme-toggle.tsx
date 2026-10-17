@@ -2,8 +2,6 @@
 
 import { Moon, Sun } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-
 // The icon is picked by CSS from the .dark class, so server and client
 // render the same markup and there's no hydration mismatch.
 export function ThemeToggle() {
@@ -17,15 +15,15 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="icon-lg"
+    <button
+      type="button"
+      className="theme-btn"
       onClick={toggle}
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
     >
-      <Sun className="hidden dark:block" aria-hidden />
-      <Moon className="dark:hidden" aria-hidden />
-    </Button>
+      <Sun className="hidden size-4 dark:block" aria-hidden />
+      <Moon className="size-4 dark:hidden" aria-hidden />
+    </button>
   );
 }

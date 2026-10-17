@@ -12,8 +12,9 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
 - Waiting on Olu: LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"
 
-## Positioning (decided Sep 27)
-- **Title line:** Forward deployed product manager · AI product builder
+## Positioning (updated Oct 17)
+- **Role line:** "I build AI that multiplies output" (title: AI product builder). Olu uses AI to build solutions that multiply output and performance and address customer needs. "Forward deployed PM" is no longer the headline.
+- **No job-search signal** in public UI (no "Open to PM roles"); the top bar shows "Now building" instead.
 - **Both halves, every time.** Each project and each log entry shows the PM thinking (who it's for, the problem, the trade-offs, the roadmap) *and* the builder proof (what shipped, the eval number, what broke). Never one without the other.
 - **Differentiator:** a PM who builds, measures with evals, and documents every step in public.
 
@@ -45,7 +46,7 @@ I'm a product manager who builds. I work inside messy real-world systems (catalo
 ## Stats (to discuss with Olu)
 Only stats with a source. Two kinds:
 - **Build stats (automatic):** from content: episodes shipped, eval tasks run, headline eval deltas.
-- **PM career stats (Olu supplies):** e.g. products launched, adoption or revenue impact, team size. Each one needs a role and year next to it, and should match the résumé. Live in `content/career.ts`; numbers from other résumé versions are used only if they agree with it. Never invent placeholder stats.
+- **PM career stats (Olu supplies):** e.g. products launched, adoption or revenue impact, team size. Each one needs a role and year next to it, and should match the résumé. Live in `content/career.ts`. Source of truth (Olu, Oct 17): `Oluwaseye_Akele_Resume_CO.pdf`; every number must match it, and the home Proof section leads with its AI results. Never invent placeholder stats.
 
 ## Content model
 Project data lives in `content/projects.ts` and log posts live in `content/log/*.mdx`. Pages read from these; never hard-code details in components.
@@ -84,12 +85,13 @@ export type LogPost = {
 // Validated with zod in lib/log.ts; a bad post fails the build.
 ```
 
-Seed projects in this order:
-1. ShelfReady — Agent-Ready Storefront (in-progress)
-2. OpenAPI → Agent Toolkit (planned)
-3. Trustworthy Ask-Your-Data Analyst (planned)
-4. Eval & Monitoring Harness (planned)
-5. Earlier work: Relocation Recommender, Wearwise (Olu will supply links and one-liners)
+Builds, in build order (Oct 17; replaces the earlier planned list). Build details and "what counts as done" are in `docs/design/portfolio-case-studies.md`; planned builds show no numbers until measured:
+1. ShelfReady — Agent-Ready Storefront (live, real numbers)
+2. Support copilot (planned) · 3. Model router (planned) · 4. Roadmap scorer (planned) · 5. Activation flow (planned)
+- Next: Interview synthesiser, Weekly metrics reviewer
+- Earlier work: Wherewise (relocation recommender), "Live soon", no link
+
+`Project` also carries the plate fields: `build`, `kind`, `meta`, `problem`, `bet`, `result`, `metric` (measured only), `plate` (artifact + color).
 
 ## Case study MDX template
 Sections, in order: **Customer & problem** · **Strategy & scope** (what I chose not to build, and why) · **What I built** (architecture diagram) · **Key decisions & trade-offs** · **Results** (headline number + before/after chart) · **What broke** · **Roadmap / next steps** · **Build log** (links to every episode post) · **Links**.
@@ -98,8 +100,10 @@ Sections, in order: **Customer & problem** · **Strategy & scope** (what I chose
 Every episode gets one post. The source material is the repo's session log, DECISIONS.md and commits. The full template (site post, LinkedIn post, short post) is in `docs/POST_TEMPLATE.md`. New posts start as `draft: true`; the LinkedIn and short versions go in `docs/posts/<slug>.md`.
 
 ## Design rules
-- Clean and fast: system font or one Google font, lots of whitespace, light + dark mode.
-- Palette (Olu, Sep 28): violet → rose accent gradient (`brand`, `brand-2`), violet-tinted neutrals, glow + dot-grid backdrop. No teal/LinkedIn-blue. Keep every text pair ≥ 4.5:1.
+- **Editorial redesign (Oct 17)** per `docs/design/portfolio-design-brief.md` and the reference prototype `docs/design/portfolio-hedgehog.html`: stacked condensed name + arched photo, ticker, offset case-file plates (Problem / Bet / Result), quill-spike bands, process rail, About strip, Index, ink contact block as the site footer. Styles live in `app/editorial.css`.
+- **Fonts:** Archivo (display, width 62%), Instrument Sans (body), DM Mono (utility), all via `next/font` (self-hosted). This replaces the earlier one-font rule.
+- **Palette A (Olu, Oct 17):** tuned from the hero photo with the brief's matcher: espresso ink, lavender paper, berry-rose band, amber signal; plates amber / rose-buff / dusty rose / ink. Tokens in `app/globals.css`. No teal/LinkedIn-blue. Keep every text pair ≥ 4.5:1 (all measured ≥ 5.1).
+- **Photos:** `public/photos/` (hero arch = olu-hero.jpg; About strip = olu-about-1/2.jpg; olu-side.jpg spare).
 - Project cards lead with the headline number, not the tech stack.
 - "In progress" and "planned" cards are shown on purpose; they signal momentum. Style them clearly but quietly.
 - Every page must score 95+ on Lighthouse performance and accessibility. Images via `next/image`, alt text on everything (including the headshot).
