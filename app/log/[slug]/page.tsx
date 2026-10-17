@@ -55,118 +55,83 @@ export default async function LogPostPage({
     (await caseStudyHref(post.project)) ?? `/#project-${post.project}`;
   const project = projectName(post.project);
 
+  const external = { target: "_blank", rel: "noopener noreferrer" } as const;
+
   return (
-    <main className="mx-auto w-full max-w-content px-gutter pt-10 pb-section sm:pt-16">
-      <article className="max-w-prose">
-        <p className="text-sm text-muted-foreground">
-          <Link href={`/log?project=${post.project}`} className="hover:text-brand">
-            {project}
-          </Link>{" "}
-          · {formatEpisode(post.episode)} ·{" "}
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
-          {post.draft && (
-            <span className="ml-2 rounded-full border border-dashed px-2 py-0.5 text-xs">
-              Draft
-            </span>
-          )}
-        </p>
-        <h1 className="mt-3 text-title font-semibold sm:text-4xl sm:leading-tight">
-          {post.title}
-        </h1>
-        <p className="mt-4 text-lead text-muted-foreground">{post.summary}</p>
+    <main className="page wrap">
+      <article>
+        <header className="page-head">
+          <p className="meta-line mono">
+            <Link href={`/log?project=${post.project}`}>{project}</Link>
+            <span>{formatEpisode(post.episode)}</span>
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
+            {post.draft && <span className="pill dashed">Draft</span>}
+          </p>
+          <h1 className="display post-title">{post.title}</h1>
+          <p className="lede">{post.summary}</p>
+        </header>
 
-        <aside
-          aria-label="Takeaways"
-          className="mt-8 rounded-xl border border-l-4 border-l-brand bg-card p-5"
-        >
-          <dl className="grid gap-4">
-            <div>
-              <dt className="text-sm font-semibold">PM takeaway</dt>
-              <dd className="mt-1">{post.pmTakeaway}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-semibold">Build takeaway</dt>
-              <dd className="mt-1">{post.buildTakeaway}</dd>
-            </div>
-            {post.metric && (
+        <div className="article-grid">
+          <aside className="article-side" aria-label="Takeaways">
+            <dl className="takeaways">
               <div>
-                <dt className="text-sm font-semibold">The number</dt>
-                <dd className="mt-1 font-medium text-brand">{post.metric}</dd>
+                <dt className="mono">PM takeaway</dt>
+                <dd>{post.pmTakeaway}</dd>
               </div>
-            )}
-          </dl>
-        </aside>
+              <div>
+                <dt className="mono">Build takeaway</dt>
+                <dd>{post.buildTakeaway}</dd>
+              </div>
+              {post.metric && (
+                <div className="number">
+                  <dt className="mono">The number</dt>
+                  <dd>{post.metric}</dd>
+                </div>
+              )}
+            </dl>
+            <div>
+              <span className="side-label mono">Proof and links</span>
+              <ul className="side-list mono">
+                {post.commit && (
+                  <li>
+                    <a href={post.commit} {...external}>
+                      The commit ↗
+                    </a>
+                  </li>
+                )}
+                {post.linkedinUrl && (
+                  <li>
+                    <a href={post.linkedinUrl} {...external}>
+                      Discuss on LinkedIn ↗
+                    </a>
+                  </li>
+                )}
+                <li>
+                  <Link href={projectHref}>About {project}</Link>
+                </li>
+              </ul>
+            </div>
+          </aside>
 
-        <div className="mt-8">
-          <Content />
+          <div className="prose-ed">
+            <Content />
+          </div>
         </div>
 
-        <footer className="mt-12 space-y-6 border-t pt-8">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
-            {post.commit && (
-              <li>
-                <a
-                  href={post.commit}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-4 hover:text-brand"
-                >
-                  Proof: the commit
-                </a>
-              </li>
-            )}
-            {post.linkedinUrl && (
-              <li>
-                <a
-                  href={post.linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-4 hover:text-brand"
-                >
-                  Discuss on LinkedIn
-                </a>
-              </li>
-            )}
-            <li>
-              <Link
-                href={projectHref}
-                className="underline underline-offset-4 hover:text-brand"
-              >
-                About the {project} project
-              </Link>
-            </li>
-          </ul>
-
-          <nav
-            aria-label="Episodes"
-            className="grid gap-4 text-sm sm:grid-cols-2"
-          >
-            {prev ? (
-              <Link
-                href={`/log/${prev.slug}`}
-                className="rounded-lg border p-4 hover:border-brand"
-              >
-                <span className="text-muted-foreground">
-                  ← {formatEpisode(prev.episode)}
-                </span>
-                <span className="mt-1 block font-medium">{prev.title}</span>
-              </Link>
-            ) : (
-              <span />
-            )}
-            {next && (
-              <Link
-                href={`/log/${next.slug}`}
-                className="rounded-lg border p-4 text-right hover:border-brand"
-              >
-                <span className="text-muted-foreground">
-                  {formatEpisode(next.episode)} →
-                </span>
-                <span className="mt-1 block font-medium">{next.title}</span>
-              </Link>
-            )}
-          </nav>
-        </footer>
+        <nav aria-label="Episodes" className="ep-nav mono">
+          {prev && (
+            <Link href={`/log/${prev.slug}`}>
+              <span>← {formatEpisode(prev.episode)}</span>
+              <span className="ep-title">{prev.title}</span>
+            </Link>
+          )}
+          {next && (
+            <Link href={`/log/${next.slug}`} className="next">
+              <span>{formatEpisode(next.episode)} →</span>
+              <span className="ep-title">{next.title}</span>
+            </Link>
+          )}
+        </nav>
       </article>
     </main>
   );

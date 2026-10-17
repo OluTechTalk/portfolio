@@ -21,22 +21,20 @@ export default async function LogPage() {
   }));
 
   return (
-    <main className="mx-auto w-full max-w-content px-gutter pt-10 pb-section sm:pt-16">
-      <p className="eyebrow">Built in public</p>
-      <h1 className="mt-2 text-display font-semibold">Build log</h1>
-      <p className="mt-4 max-w-prose text-lead text-muted-foreground">
-        One post per episode: the product call, what I built, what broke, and
-        the number.{" "}
-        <a
-          href="/log/rss.xml"
-          className="text-base font-medium text-foreground underline underline-offset-4 hover:text-brand"
-        >
-          RSS
-        </a>
-      </p>
-      <div className="mt-10">
-        <LogFilter posts={posts} options={options} />
-      </div>
+    <main className="page wrap">
+      <header className="page-head">
+        <p className="meta-line mono">
+          <span>Built in public</span>
+          <span>One post per episode</span>
+          <a href="/log/rss.xml">RSS</a>
+        </p>
+        <h1 className="display page-title">Build log</h1>
+        <p className="lede">
+          The product call, what I built, what broke, and the number. Every
+          episode, written up.
+        </p>
+      </header>
+      <LogFilter posts={posts} options={options} />
     </main>
   );
 }

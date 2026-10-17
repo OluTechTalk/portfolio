@@ -31,12 +31,12 @@ export default async function Image({
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "80px 96px",
-          background: "#ffffff",
-          color: "#0a0a0a",
-          borderTop: "16px solid #8535ce",
+          background: "#e1d3e4",
+          color: "#25130e",
+          borderTop: "20px solid #88252e",
         }}
       >
-        <div style={{ fontSize: 32, color: "#8535ce", display: "flex" }}>
+        <div style={{ fontSize: 32, color: "#80232b", display: "flex" }}>
           Case study
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -55,7 +55,7 @@ export default async function Image({
             <div
               style={{
                 fontSize: 30,
-                color: "#525252",
+                color: "#63504b",
                 lineHeight: 1.35,
                 display: "flex",
               }}
@@ -69,7 +69,7 @@ export default async function Image({
             display: "flex",
             justifyContent: "space-between",
             fontSize: 28,
-            color: "#525252",
+            color: "#63504b",
           }}
         >
           <span>{site.name}</span>

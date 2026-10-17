@@ -6,8 +6,8 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: **v1 live** + ShelfReady eval results (headline, case study) and log posts Ep00–07 + portfolio post all published
-- Last session: 06-eval-results-and-series
+- Phase: **v2 live**: editorial redesign (Palette A, Archivo/Instrument Sans/DM Mono), Proof from résumé, inner pages restyled
+- Last session: 07-editorial-redesign
 - Next target: ShelfReady Ep08 (P6 Ship) → Loom as videoUrl, case study from its docs/CASE_STUDY.md, Groq results, Ep08 + launch posts
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
 - Waiting on Olu: LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"

@@ -3,88 +3,82 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { site } from "@/content/site";
-import headshot from "@/public/headshot.jpg";
+import sidePhoto from "@/public/photos/olu-side.jpg";
+import aboutPhoto from "@/public/photos/olu-about-1.jpg";
 
 export const metadata: Metadata = {
   title: `About · ${site.name}`,
   description:
-    "Olu Akele is a forward deployed product manager: he frames the customer problem, sets the strategy, then builds the AI himself and proves it works with evals.",
+    "Olu Akele turns AI capabilities into measurable outcomes: 9+ years leading product at Visual Comfort & Co., Zillow, Spreetail and Arcadis, now building AI products in public.",
   alternates: { canonical: "/about" },
 };
 
-// Draft bio from the positioning in CLAUDE.md; Olu will edit.
+// Draft bio from Oluwaseye_Akele_Resume_CO (the source of truth); Olu will edit.
 const bio = [
-  "I'm a product manager by trade, and I work as a forward deployed product manager: the space between a forward deployed engineer and a product manager. I've led product at Visual Comfort & Co., Zillow, Spreetail and Arcadis, across growth, real estate marketplaces, e-commerce logistics and infrastructure software.",
-  "On the product side, I start with the customer. I frame the problem, set the strategy, decide what not to build, and run the roadmap, writing down every trade-off so the reasoning survives the meeting.",
-  "On the builder side, I ship the system myself, inside the messy real-world setup it has to work in, and prove it works with evals: known answers, measured before and after. I document every step in public, and the build log is the receipts.",
+  "I'm a product leader who turns AI capabilities into measurable business outcomes, and these days I build the AI myself.",
+  "Over 9+ years at Visual Comfort & Co., Zillow, Spreetail and Arcadis, I've run growth, marketplace and catalog products. Most recently I led a custom-trained LLM catalog audit agent adopted by 20 teams, cutting validation and approval from six weeks to 45 minutes, and built the eval framework that took an AI refund agent from 71% to 93% decision accuracy before launch.",
+  "On every build I start with the customer problem, decide what not to build, ship inside the real system, and prove it with evals. Then I write down what broke. ShelfReady is the first build in public, and four more are queued.",
 ];
 
-const links = [
-  { label: "LinkedIn", href: site.links.linkedin, external: true },
-  { label: "GitHub", href: site.links.github, external: true },
-  { label: site.links.email, href: `mailto:${site.links.email}`, external: false },
-  { label: "Book a call", href: site.links.booking, external: true },
-];
+const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto w-full max-w-content px-gutter pt-10 pb-section sm:pt-16">
-      <div className="grid gap-10 md:grid-cols-[auto_1fr] md:gap-14">
-        <div>
-          <div className="inline-block rounded-full bg-linear-to-br from-brand to-brand-2 p-1 shadow-lg shadow-brand/20">
+    <main className="page wrap">
+      <header className="page-head">
+        <p className="meta-line mono">
+          <span>{site.title}</span>
+          <span>PMP · Certified ScrumMaster</span>
+        </p>
+        <h1 className="display page-title">About</h1>
+      </header>
+
+      <div className="about-page">
+        <div className="about-photos">
+          <div className="slot">
             <Image
-              src={headshot}
-              alt="Olu Akele, smiling, in a pink button-down shirt"
-              width={192}
-              height={192}
+              src={sidePhoto}
+              alt="Olu Akele seated at a table, looking to the side"
+              fill
               preload
               placeholder="blur"
-              className="size-36 rounded-full border-4 border-background object-cover sm:size-48"
+              sizes="(max-width: 800px) 50vw, 20vw"
+              style={{ objectPosition: "48% 30%" }}
+            />
+          </div>
+          <div className="slot">
+            <Image
+              src={aboutPhoto}
+              alt="Olu Akele smiling, one hand resting on his arm"
+              fill
+              placeholder="blur"
+              sizes="(max-width: 800px) 50vw, 20vw"
+              style={{ objectPosition: "50% 25%" }}
             />
           </div>
         </div>
 
-        <div className="max-w-prose">
-          <p className="eyebrow">About</p>
-          <h1 className="mt-2 text-display font-semibold">{site.name}</h1>
-          <p className="mt-3 text-lg font-medium text-muted-foreground">
-            {site.title}
-          </p>
-          <div className="mt-8 space-y-5 text-lead">
-            {bio.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-            ))}
+        <div className="prose-ed">
+          {bio.map((paragraph) => (
+            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+          ))}
+          <div className="btn-row">
+            <a href={site.links.booking} {...external} className="btn btn-solid">
+              Book a call ↗
+            </a>
+            <a href={site.links.linkedin} {...external} className="btn">
+              LinkedIn
+            </a>
+            <a href={site.links.github} {...external} className="btn">
+              GitHub
+            </a>
+            <a href="#contact" className="btn">
+              Email
+            </a>
           </div>
-
-          <h2 className="mt-10 text-sm font-semibold text-muted-foreground">
-            Find me
-          </h2>
-          <ul className="mt-3 flex flex-wrap gap-3">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  {...(link.external && {
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                  })}
-                  className="inline-flex h-10 items-center rounded-lg border bg-card px-4 text-sm font-medium transition hover:border-brand/50 hover:text-brand"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          <p className="mt-10 text-muted-foreground">
-            See what I&apos;m building in the{" "}
-            <Link
-              href="/log"
-              className="font-medium text-foreground underline underline-offset-4 hover:text-brand"
-            >
-              build log
-            </Link>
-            .
+          <p className="mono muted" style={{ marginTop: 28 }}>
+            See the work in the <Link href="/#work">case studies</Link> and the{" "}
+            <Link href="/log">build log</Link>.
           </p>
         </div>
       </div>

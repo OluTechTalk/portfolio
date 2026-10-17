@@ -6,7 +6,6 @@ import { projects } from "@/content/projects";
 import { getCaseStudies, getCaseStudy } from "@/lib/case-studies";
 import { formatDate, formatEpisode } from "@/lib/format";
 import { getPosts } from "@/lib/log";
-import { cn } from "@/lib/utils";
 
 export async function generateStaticParams() {
   return (await getCaseStudies()).map((c) => ({ slug: c.slug }));
@@ -55,7 +54,6 @@ export async function generateMetadata({
   };
 }
 
-const linkClass = "underline underline-offset-4 hover:text-brand";
 
 export default async function CaseStudyPage({
   params,
@@ -76,114 +74,109 @@ export default async function CaseStudyPage({
     project.videoUrl && { label: "Video walkthrough", href: project.videoUrl },
   ].filter((l): l is { label: string; href: string } => Boolean(l));
 
+  const pad = (n: number) => String(n).padStart(2, "0");
+
   return (
-    <main className="mx-auto w-full max-w-content px-gutter pt-10 pb-section sm:pt-16">
-      <article className="max-w-prose">
-        <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-          <span>Case study</span>
-          <span
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium",
-              project.status === "planned"
-                ? "text-muted-foreground"
-                : "text-foreground",
-            )}
-          >
-            {project.status === "in-progress" && (
-              <span className="size-1.5 rounded-full bg-brand" aria-hidden />
-            )}
-            {statusLabel[project.status]}
-          </span>
-          <span>
-            Updated <time dateTime={study.updated}>{formatDate(study.updated)}</time>
-          </span>
-          {study.draft && (
-            <span className="rounded-full border border-dashed px-2 py-0.5 text-xs">
-              Draft
+    <main className="page wrap">
+      <article>
+        <header className="page-head">
+          <p className="meta-line mono">
+            <span>Case study{project.build ? ` · Build ${pad(project.build)}` : ""}</span>
+            <span className="pill">
+              {project.status === "in-progress" && <span className="dot" aria-hidden />}
+              {statusLabel[project.status]}
             </span>
-          )}
-        </p>
-        <h1 className="mt-3 text-title font-semibold sm:text-4xl sm:leading-tight">
-          {project.title}
-        </h1>
-        {project.headline && (
-          <p className="mt-4 text-xl font-semibold text-brand">
-            {project.headline}
+            <span>
+              Updated <time dateTime={study.updated}>{formatDate(study.updated)}</time>
+            </span>
+            {study.draft && <span className="pill dashed">Draft</span>}
           </p>
-        )}
-        <p className="mt-4 text-lead text-muted-foreground">
-          {project.oneLiner}
-        </p>
-        <p className="mt-3 text-sm">
-          <span className="font-medium">For:</span>{" "}
-          <span className="text-muted-foreground">{project.customer}</span>
-        </p>
-        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Tags">
-          {project.tags.map((tag) => (
-            <li
-              key={tag}
-              className="rounded-md bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
+          <h1 className="display page-title">{project.title.split(" — ")[0]}</h1>
+          <p className="lede">{project.oneLiner}</p>
+        </header>
 
-        <div className="mt-8">
-          <Content />
-        </div>
-
-        <section aria-labelledby="build-log" className="mt-10">
-          <h2
-            id="build-log"
-            className="mb-3 text-title font-semibold"
-          >
-            Build log
-          </h2>
-          {posts.length > 0 ? (
-            <ol className="divide-y border-y">
-              {posts.map((post) => (
-                <li key={post.slug} className="py-3">
-                  <Link
-                    href={`/log/${post.slug}`}
-                    className="group block"
-                  >
-                    <span className="text-sm text-muted-foreground">
-                      {formatEpisode(post.episode)} · {formatDate(post.date)}
-                    </span>
-                    <span className="block font-medium group-hover:text-brand">
-                      {post.title}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p className="text-muted-foreground">No posts yet.</p>
-          )}
-        </section>
-
-        {links.length > 0 && (
-          <section aria-labelledby="links" className="mt-10">
-            <h2 id="links" className="mb-3 text-title font-semibold">
-              Links
-            </h2>
-            <ul className="space-y-2">
-              {links.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={linkClass}
-                  >
-                    {link.label}
-                  </a>
-                </li>
+        <div className="article-grid">
+          <aside className="article-side" aria-label="At a glance">
+            <dl className="takeaways">
+              {project.headline && (
+                <div className="number">
+                  <dt className="mono">Result</dt>
+                  <dd>{project.headline}</dd>
+                </div>
+              )}
+              <div>
+                <dt className="mono">For</dt>
+                <dd>{project.customer}</dd>
+              </div>
+              {project.meta && (
+                <div>
+                  <dt className="mono">Built with</dt>
+                  <dd>{project.meta}</dd>
+                </div>
+              )}
+            </dl>
+            <ul className="tags mono" aria-label="Tags">
+              {project.tags.map((tag) => (
+                <li key={tag}>{tag}</li>
               ))}
             </ul>
-          </section>
-        )}
+            {links.length > 0 && (
+              <div>
+                <span className="side-label mono">Links</span>
+                <ul className="side-list mono">
+                  {links.map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} target="_blank" rel="noopener noreferrer">
+                        {link.label} ↗
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </aside>
+
+          <div>
+            <div className="prose-ed">
+              <Content />
+              <h2 id="build-log">Build log</h2>
+            </div>
+            {posts.length > 0 ? (
+              <ol className="ruled log-list">
+                {posts.map((post) => (
+                  <li key={post.slug}>
+                    <Link href={`/log/${post.slug}`} className="row">
+                      <span className="mono">
+                        {formatEpisode(post.episode)}
+                        <br />
+                        {formatDate(post.date)}
+                      </span>
+                      <span className="entry">
+                        <span className="ep-title">{post.title}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="muted">No posts yet.</p>
+            )}
+            {links.length > 0 && (
+              <div className="prose-ed">
+                <h2 id="links">Links</h2>
+                <ul>
+                  {links.map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} target="_blank" rel="noopener noreferrer">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
       </article>
     </main>
   );

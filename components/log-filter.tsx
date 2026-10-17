@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import { LogEntries } from "@/components/log-entries";
 import type { LogPost } from "@/lib/log";
-import { cn } from "@/lib/utils";
 
 type Option = { slug: string; name: string };
 
@@ -42,8 +41,8 @@ export function LogFilter({
 
   return (
     <>
-      <nav aria-label="Filter by project" className="mb-8">
-        <ul className="flex flex-wrap gap-2">
+      <nav aria-label="Filter by project">
+        <ul className="filters">
           {chips.map((chip) => {
             const isActive = chip.slug === selected;
             return (
@@ -55,12 +54,7 @@ export function LogFilter({
                     choose(chip.slug);
                   }}
                   aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "inline-flex h-9 items-center rounded-full border px-4 text-sm font-medium transition-colors",
-                    isActive
-                      ? "border-transparent bg-linear-to-r from-brand to-brand-2 text-brand-foreground"
-                      : "bg-card text-muted-foreground hover:text-foreground",
-                  )}
+                  className="btn"
                 >
                   {chip.name}
                 </a>
