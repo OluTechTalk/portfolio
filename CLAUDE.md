@@ -6,11 +6,11 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: **v2 live**; session 08 committed locally, not pushed (waiting on Olu's OK): new build list (Red Pen, Roadmap scorer, allergen assistant, Model router + Next up row), `dataNote`, `npm run import-posts`
+- Phase: **v2 live** + session 08: new build list (Red Pen, Roadmap scorer, allergen assistant, Model router + Next up row), `dataNote`, `npm run import-posts`
 - Last session: 08-add-builds
 - Next target: ShelfReady Ep08 (P6 Ship) → Loom as videoUrl, case study from its docs/CASE_STUDY.md, Groq results, Ep08 + launch posts
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
-- Waiting on Olu: OK to push session 08; Red Pen posts need `commit` as a URL before they import; LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"
+- Waiting on Olu: Red Pen posts need `commit` as a URL before they import; LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"
 
 ## Positioning (updated Oct 17)
 - **Role line:** "I build AI that multiplies output" (title: AI product builder). Olu uses AI to build solutions that multiply output and performance and address customer needs. "Forward deployed PM" is no longer the headline.
