@@ -5,7 +5,7 @@ import { FitName } from "@/components/fit-name";
 import { PlateArt } from "@/components/plate-art";
 import { ProcessRail } from "@/components/process-rail";
 import { career } from "@/content/career";
-import { earlierWork, projectName, projects } from "@/content/projects";
+import { dataNoteLabel, earlierWork, projectName, projects } from "@/content/projects";
 import { process, site, ticker, toolkit } from "@/content/site";
 import { getCaseStudies } from "@/lib/case-studies";
 import { formatEpisode } from "@/lib/format";
@@ -37,7 +37,7 @@ export default async function Home() {
   const builds = projects
     .filter((p) => p.featured !== false && p.build)
     .sort((a, b) => (a.build ?? 0) - (b.build ?? 0));
-  const plated = builds.filter((p) => p.plate).slice(0, 4);
+  const plated = builds.filter((p) => p.plate).slice(0, 5);
   const shipped = builds.filter((p) => p.metric).length;
   const queued = builds.length - shipped;
   const nextUp = projects.filter((p) => p.status === "next");
@@ -144,7 +144,7 @@ export default async function Home() {
             const href = caseStudyHref[p.slug];
             const logs = logCounts[p.slug] ?? 0;
             return (
-              <figure key={p.slug} className={`plate p${i + 1} rv`}>
+              <figure key={p.slug} className={`plate p${i + 1} rv${p.metric ? "" : " is-planned"}`}>
                 <div className={`frame ${p.plate!.color}`}>
                   <div className="tag">
                     <b>{p.metric?.value ?? "Planned"}</b>
@@ -159,7 +159,10 @@ export default async function Home() {
                       Build {pad(p.build!)} · {statusLabel[p.status]}
                     </span>
                   </div>
-                  <span className="mono meta">{p.meta}</span>
+                  <span className="mono meta">
+                    {p.meta}
+                    {p.dataNote && <span className="data-note">{dataNoteLabel[p.dataNote]}</span>}
+                  </span>
                   <dl className="cf">
                     <div>
                       <dt className="mono">Problem</dt>
@@ -174,12 +177,22 @@ export default async function Home() {
                       <dd>{p.result}</dd>
                     </div>
                   </dl>
-                  {(href || p.demoUrl || logs > 0) && (
+                  {(href || p.demoUrl || p.repoUrl || p.videoUrl || logs > 0) && (
                     <div className="plate-links mono">
                       {href && <Link href={href}>Case study</Link>}
                       {p.demoUrl && (
                         <a href={p.demoUrl} {...external}>
                           Live demo ↗
+                        </a>
+                      )}
+                      {p.repoUrl && (
+                        <a href={p.repoUrl} {...external}>
+                          Repo ↗
+                        </a>
+                      )}
+                      {p.videoUrl && (
+                        <a href={p.videoUrl} {...external}>
+                          Video ↗
                         </a>
                       )}
                       {logs > 0 && (
@@ -194,6 +207,19 @@ export default async function Home() {
             );
           })}
         </div>
+        {nextUp.length > 0 && (
+          <div className="next-up">
+            <h3 className="mono">Next up</h3>
+            <ul>
+              {nextUp.map((p) => (
+                <li key={p.slug}>
+                  <span className="name">{p.title}</span>
+                  <span className="what">{p.oneLiner}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       {/* 4. Statement + process rail */}

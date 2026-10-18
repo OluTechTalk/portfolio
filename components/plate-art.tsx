@@ -129,6 +129,35 @@ function PlannedFunnel() {
   );
 }
 
+function PlannedSources() {
+  const doc = (x: number, title: string) => (
+    <g>
+      <rect x={x} y="170" width="200" height="230" fill="none" stroke="currentColor" strokeWidth="4" strokeDasharray="10 8" />
+      <text x={x + 100} y="210" fontSize="18" textAnchor="middle" letterSpacing="1.5">
+        {title}
+      </text>
+      {[250, 290, 330].map((y) => (
+        <line key={y} x1={x + 30} y1={y} x2={x + 170} y2={y} stroke="currentColor" strokeWidth="3" strokeDasharray="4 8" />
+      ))}
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 800 640" preserveAspectRatio="xMidYMid meet" className="planned-art" aria-hidden>
+      {doc(140, "MENU")}
+      {doc(460, "RECIPE")}
+      <g stroke="currentColor" strokeWidth="5" strokeLinecap="round">
+        <line x1="380" y1="265" x2="420" y2="305" />
+        <line x1="420" y1="265" x2="380" y2="305" />
+      </g>
+      <path d="M400 410 v50" stroke="currentColor" strokeWidth="4" strokeDasharray="6 8" />
+      <rect x="250" y="470" width="300" height="60" fill="none" stroke="currentColor" strokeWidth="4" />
+      <text x="400" y="508" fontSize="19" textAnchor="middle" letterSpacing="2">
+        ASK THE KITCHEN
+      </text>
+    </svg>
+  );
+}
+
 export function PlateArt({ artifact }: { artifact: PlateArtifact }) {
   switch (artifact.type) {
     case "bars":
@@ -159,6 +188,12 @@ export function PlateArt({ artifact }: { artifact: PlateArtifact }) {
       return (
         <div className="art" data-static>
           <PlannedFunnel />
+        </div>
+      );
+    case "sources":
+      return (
+        <div className="art" data-static>
+          <PlannedSources />
         </div>
       );
   }

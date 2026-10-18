@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { projects } from "@/content/projects";
+import { dataNoteLabel, projects } from "@/content/projects";
 import { getCaseStudies, getCaseStudy } from "@/lib/case-studies";
 import { formatDate, formatEpisode } from "@/lib/format";
 import { getPosts } from "@/lib/log";
@@ -89,6 +89,7 @@ export default async function CaseStudyPage({
             <span>
               Updated <time dateTime={study.updated}>{formatDate(study.updated)}</time>
             </span>
+            {project.dataNote && <span className="pill">{dataNoteLabel[project.dataNote]}</span>}
             {study.draft && <span className="pill dashed">Draft</span>}
           </p>
           <h1 className="display page-title">{project.title.split(" — ")[0]}</h1>

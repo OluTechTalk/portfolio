@@ -6,11 +6,11 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: **v2 live**: editorial redesign (Palette A, Archivo/Instrument Sans/DM Mono), Proof from résumé, inner pages restyled
-- Last session: 07-editorial-redesign
+- Phase: **v2 live**; session 08 committed locally, not pushed (waiting on Olu's OK): new build list (Red Pen, Roadmap scorer, allergen assistant, Model router + Next up row), `dataNote`, `npm run import-posts`
+- Last session: 08-add-builds
 - Next target: ShelfReady Ep08 (P6 Ship) → Loom as videoUrl, case study from its docs/CASE_STUDY.md, Groq results, Ep08 + launch posts
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
-- Waiting on Olu: LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"
+- Waiting on Olu: OK to push session 08; Red Pen posts need `commit` as a URL before they import; LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"
 
 ## Positioning (updated Oct 17)
 - **Role line:** "I build AI that multiplies output" (title: AI product builder). Olu uses AI to build solutions that multiply output and performance and address customer needs. "Forward deployed PM" is no longer the headline.
@@ -85,11 +85,28 @@ export type LogPost = {
 // Validated with zod in lib/log.ts; a bad post fails the build.
 ```
 
-Builds, in build order (Oct 17; replaces the earlier planned list). Build details and "what counts as done" are in `docs/design/portfolio-case-studies.md`; planned builds show no numbers until measured:
-1. ShelfReady — Agent-Ready Storefront (live, real numbers)
-2. Support copilot (planned) · 3. Model router (planned) · 4. Roadmap scorer (planned) · 5. Activation flow (planned)
-- Next: Interview synthesiser, Weekly metrics reviewer
+Seed projects, in site order (Oct 17, v2; replaces the earlier lists). Build details and "what counts as done" are in `docs/case-studies.md`; planned builds show no numbers until measured. Site build numbers follow this order (docs/DECISIONS.md):
+1. ShelfReady — Agent-Ready Storefront (`shelfready`, live, real numbers)
+2. Red Pen — Support copilot with an eval harness (`redpen`, planned; repo github.com/OluTechTalk/redpen; case-studies.md Build 01)
+3. Roadmap scorer (`roadmap-scorer`, planned; Build 03)
+4. Restaurant allergen assistant, working title (`allergen-assistant`, planned)
+5. Model router (`model-router`, planned; Build 02)
+- Next up (quiet row, no links): Activation flow (Build 04), Weekly digest (covers the weekly metrics reviewer), Interview synthesiser, OpenAPI → Agent Toolkit
 - Earlier work: Wherewise (relocation recommender), "Live soon", no link
+- Removed: Eval & Monitoring Harness (became Red Pen), Trustworthy Ask-Your-Data Analyst
+
+**Build order:** Red Pen → Roadmap scorer → allergen assistant → Model router, then Next up. Python for eval and analysis repos, TypeScript for anything with a UI.
+
+`Project.dataNote?: "real" | "synthetic" | "anonymised" | "simulated"` shows as a small label on plates and case studies once set; leave it unset for planned builds.
+
+## Case study rules
+From `docs/case-studies.md`, "Ground rules":
+1. **Every number on the portfolio comes from a run Olu did.** The prototype placeholders (54% to 88%, -74%, 11 to 5, 22% to 31%) stay off the site until a measured run replaces them.
+2. **Label the data.** Synthetic data is called synthetic (`dataNote`); real data from a job needs permission and anonymising.
+3. **No invented users.** No real users → report eval and simulation results, not adoption or retention.
+4. **Keep the receipts.** Every eval run is saved as CSV/JSON with date, model, prompt version and score; charts are drawn from these files.
+5. **One case-study format.** Problem, Bet, Result, plus role, tools and time spent (the case-file plates).
+- No case study page until a build ships.
 
 `Project` also carries the plate fields: `build`, `kind`, `meta`, `problem`, `bet`, `result`, `metric` (measured only), `plate` (artifact + color).
 
@@ -97,7 +114,9 @@ Builds, in build order (Oct 17; replaces the earlier planned list). Build detail
 Sections, in order: **Customer & problem** · **Strategy & scope** (what I chose not to build, and why) · **What I built** (architecture diagram) · **Key decisions & trade-offs** · **Results** (headline number + before/after chart) · **What broke** · **Roadmap / next steps** · **Build log** (links to every episode post) · **Links**.
 
 ## Log post template
-Every episode gets one post. The source material is the repo's session log, DECISIONS.md and commits. The full template (site post, LinkedIn post, short post) is in `docs/POST_TEMPLATE.md`. New posts start as `draft: true`; the LinkedIn and short versions go in `docs/posts/<slug>.md`.
+Every episode gets one post. The source material is the repo's session log, DECISIONS.md and commits. The full template (site post, LinkedIn post, short post, video notes) is in `docs/POST_TEMPLATE.md`. New posts start as `draft: true`.
+
+**Import pipeline:** the build repos write `docs/posts/NN-slug.md`; `npm run import-posts` reads `../shelfready` and `../redpen` (read only), refuses anything that looks like a secret, validates frontmatter with `lib/log-schema.ts`, and writes `content/log/<slug>.mdx` (draft: true) plus `docs/posts/<slug>.linkedin.md`, `.short.md`, `.video.md`. Existing slugs are never overwritten. Olu approves each post; then flip `draft: false` and push. Older hand-written social posts are `docs/posts/<slug>.md`.
 
 ## Design rules
 - **Editorial redesign (Oct 17)** per `docs/design/portfolio-design-brief.md` and the reference prototype `docs/design/portfolio-hedgehog.html`: stacked condensed name + arched photo, ticker, offset case-file plates (Problem / Bet / Result), quill-spike bands, process rail, About strip, Index, ink contact block as the site footer. Styles live in `app/editorial.css`.
@@ -118,7 +137,7 @@ Every episode gets one post. The source material is the repo's session log, DECI
 - Log posts never include secrets, keys, store IDs or env values, even redacted.
 
 ## Commands
-- `npm run dev` · `npm run build` · `npm run lint && npm run typecheck` before every commit
+- `npm run dev` · `npm run build` · `npm run import-posts` (add `--dry-run` to preview) · `npm run lint && npm run typecheck` before every commit
 
 ## Session workflow
 - Start with `/start-session`, end with `/end-session` (same commands as the ShelfReady repo; copy `.claude/commands/` over).

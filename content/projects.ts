@@ -7,7 +7,17 @@ export type PlateArtifact =
   | { type: "line" } // planned: pass rate by prompt version vs a ship gate
   | { type: "cost" } // planned: cost per task, before vs after
   | { type: "roadmap" } // planned: Now / Next / Later board
-  | { type: "funnel" }; // planned: onboarding funnel per variant
+  | { type: "funnel" } // planned: onboarding funnel per variant
+  | { type: "sources" }; // planned: two sources that disagree → "ask the kitchen"
+
+export type DataNote = "real" | "synthetic" | "anonymised" | "simulated";
+
+export const dataNoteLabel: Record<DataNote, string> = {
+  real: "Real data",
+  synthetic: "Synthetic data",
+  anonymised: "Anonymised data",
+  simulated: "Simulated",
+};
 
 export type Project = {
   slug: string; // "shelfready"
@@ -25,7 +35,8 @@ export type Project = {
   plate?: { artifact: PlateArtifact; color: "amber" | "sage" | "ink" | "buff" };
   headline?: string; // the eval number, e.g. "Agent shopping success 41% → 88%"
   proofStat?: { value: string; label: string }; // short form for the home proof strip
-  tags: string[]; // "MCP", "Shopify", "Evals", "Product strategy", ...
+  tags: string[]; // "MCP", "Shopify", "Evals", "Product strategy", ... (up to 4)
+  dataNote?: DataNote; // where the data came from; set once a build has results
   demoUrl?: string;
   repoUrl?: string;
   videoUrl?: string; // Loom
@@ -91,51 +102,32 @@ export const projects: Project[] = [
     order: 1,
   },
   {
-    slug: "support-copilot",
-    title: "Support copilot",
+    slug: "redpen",
+    title: "Red Pen — Support copilot with an eval harness",
     oneLiner:
       "An AI tool that drafts customer-support replies, plus the eval set that proves how good the drafts are.",
-    customer: "Support teams using AI-drafted replies",
+    customer: "Support teams sending AI-drafted replies they can't yet trust",
     status: "planned",
     build: 2,
     kind: "Eval harness",
-    meta: "Claude Code + Claude API / eval harness",
+    meta: "Claude Code + Claude API + Python / eval harness",
     problem:
       "AI-drafted support replies read well and still get facts wrong, and nobody can say how often.",
     bet: "Build the eval set first, then change one prompt at a time and keep only what moves the score.",
-    result:
-      "Planned: pass rate per prompt version against a ship gate, on 200 test tickets.",
+    result: "Planned: pass rate per prompt version against a ship gate.",
     plate: { artifact: { type: "line" }, color: "sage" },
-    tags: ["Evals", "RAG", "Claude API"],
+    tags: ["Evals", "RAG", "Claude API", "Python"],
+    repoUrl: "https://github.com/OluTechTalk/redpen",
     order: 2,
-  },
-  {
-    slug: "model-router",
-    title: "Model router",
-    oneLiner:
-      "Route easy requests to a small model and hard ones to a large model, then prove the savings did not cost quality.",
-    customer: "Teams pricing an AI feature",
-    status: "planned",
-    build: 3,
-    kind: "Cost and quality",
-    meta: "Claude API / cost and quality",
-    problem:
-      "Sending every request to the largest model makes each task too expensive to price.",
-    bet: "Send easy requests to a small model, escalate hard ones, and score both with the Build 02 eval set.",
-    result:
-      "Planned: cost per task before and after, and the quality difference in points.",
-    plate: { artifact: { type: "cost" }, color: "buff" },
-    tags: ["Routing", "Cost", "Evals"],
-    order: 3,
   },
   {
     slug: "roadmap-scorer",
     title: "Roadmap scorer",
     oneLiner:
       "An interactive tool that ranks feature requests by expected gain per engineering week and draws the capacity line.",
-    customer: "Product teams with more requests than capacity",
+    customer: "Product teams with more urgent requests than capacity",
     status: "planned",
-    build: 4,
+    build: 3,
     kind: "Prioritization tool",
     meta: "Claude Code + Artifact / prioritization tool",
     problem:
@@ -144,26 +136,69 @@ export const projects: Project[] = [
     result:
       "Planned: requests in vs commitments out. Example requests will be labeled as examples.",
     plate: { artifact: { type: "roadmap" }, color: "ink" },
-    tags: ["Prioritization", "Artifacts"],
+    tags: ["Prioritization", "Artifacts", "Product strategy"],
+    order: 3,
+  },
+  {
+    slug: "allergen-assistant",
+    title: "Restaurant allergen assistant",
+    oneLiner:
+      "An assistant that answers a restaurant's allergen questions and says 'ask the kitchen' whenever its sources conflict.",
+    customer: "Restaurant staff answering guests' allergen questions",
+    status: "planned",
+    build: 4,
+    kind: "Grounded answers",
+    meta: "Claude API / grounded answers + abstention",
+    problem:
+      "Allergen answers come from menus, recipes and memory, and those sources don't always agree.",
+    bet: "Answer only from the restaurant's own sources, and send the guest to the kitchen whenever they conflict.",
+    result:
+      "Planned: how often it answers correctly, and how often it says 'ask the kitchen' when it should.",
+    plate: { artifact: { type: "sources" }, color: "buff" },
+    tags: ["RAG", "Abstention", "Evals", "Claude API"],
     order: 4,
   },
+  {
+    slug: "model-router",
+    title: "Model router",
+    oneLiner:
+      "Route easy requests to a small model and hard ones to a large model, then prove the savings did not cost quality.",
+    customer: "Teams that can't price an AI feature while every request goes to the largest model",
+    status: "planned",
+    build: 5,
+    kind: "Cost and quality",
+    meta: "Claude API + Python / cost and quality",
+    problem:
+      "Sending every request to the largest model makes each task too expensive to price.",
+    bet: "Send easy requests to a small model, escalate hard ones, and score both with Red Pen's eval set.",
+    result:
+      "Planned: cost per task before and after, and the quality difference in points.",
+    plate: { artifact: { type: "cost" }, color: "sage" },
+    tags: ["Routing", "Cost", "Evals", "Python"],
+    order: 5,
+  },
+  // Next up: a quieter row under the plates, no links.
   {
     slug: "activation-flow",
     title: "Activation flow",
     oneLiner:
       "An onboarding flow with full event tracking and an A/B test of where verification happens.",
     customer: "Products losing new users before the first result",
-    status: "planned",
-    build: 5,
+    status: "next",
     kind: "Onboarding + analytics",
-    meta: "Claude Code / onboarding + analytics",
-    problem: "New users leave before they see anything useful.",
-    bet: "Show a first result before asking for verification, and log every step of the flow.",
-    result:
-      "Planned: the funnel per variant, called directional under a few hundred users.",
-    plate: { artifact: { type: "funnel" }, color: "buff" },
     tags: ["Experiments", "Analytics"],
-    order: 5,
+    order: 6,
+  },
+  {
+    slug: "weekly-digest",
+    title: "Weekly digest",
+    oneLiner:
+      "An agent that reads a metrics table every week and writes the \"what changed and why\" note.",
+    customer: "Product teams with a weekly metrics review",
+    status: "next",
+    kind: "Analytics agent",
+    tags: ["Agents", "Analytics"],
+    order: 7,
   },
   {
     slug: "interview-synthesiser",
@@ -174,18 +209,17 @@ export const projects: Project[] = [
     status: "next",
     kind: "Research workflow",
     tags: ["Research"],
-    order: 6,
+    order: 8,
   },
   {
-    slug: "weekly-metrics-reviewer",
-    title: "Weekly metrics reviewer",
-    oneLiner:
-      "An agent that reads a metrics table weekly and writes the \"what changed and why\" note.",
-    customer: "Product teams with a weekly metrics review",
+    slug: "openapi-agent-toolkit",
+    title: "OpenAPI → Agent Toolkit",
+    oneLiner: "Turns an OpenAPI spec into a set of tools an AI agent can call.",
+    customer: "Teams that want agents to use their existing API",
     status: "next",
-    kind: "Analytics agent",
-    tags: ["Agents", "Analytics"],
-    order: 7,
+    kind: "Agent tooling",
+    tags: ["Agents", "MCP"],
+    order: 9,
   },
 ];
 

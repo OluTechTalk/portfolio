@@ -2,7 +2,7 @@
 
 Handoff for Claude Code. It describes the concept, visual system, layout and content model for an AI product manager's portfolio. A working reference prototype is in `portfolio-hedgehog.html` (single file, open it in a browser). Match its structure and feel, and adapt it to the project's framework.
 
-Case-study content and build details live in `portfolio-case-studies.md`.
+Case-study content and build details live in `../case-studies.md`.
 
 ---
 

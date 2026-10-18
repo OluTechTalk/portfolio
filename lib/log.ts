@@ -5,6 +5,7 @@ import type { ComponentType } from "react";
 import { z } from "zod";
 
 import { projects } from "@/content/projects";
+import { makeLogPostSchema } from "@/lib/log-schema";
 
 const LOG_DIR = path.join(process.cwd(), "content", "log");
 
@@ -13,28 +14,7 @@ const includeDrafts = process.env.NODE_ENV !== "production";
 
 const projectSlugs = projects.map((p) => p.slug) as [string, ...string[]];
 
-// YAML may hand back an unquoted date as a Date; normalize to YYYY-MM-DD.
-const isoDate = z.preprocess(
-  (value) => (value instanceof Date ? value.toISOString().slice(0, 10) : value),
-  z.iso.date(),
-);
-
-// LogPost from CLAUDE.md, plus `draft`. Unknown keys are rejected so typos
-// fail the build instead of silently dropping a field.
-export const logPostSchema = z.strictObject({
-  slug: z.string().regex(/^[a-z0-9-]+$/, "lowercase letters, digits, dashes"),
-  project: z.enum(projectSlugs),
-  episode: z.number().int().min(0),
-  title: z.string().min(1),
-  date: isoDate,
-  summary: z.string().min(1),
-  pmTakeaway: z.string().min(1),
-  buildTakeaway: z.string().min(1),
-  metric: z.string().min(1).optional(),
-  linkedinUrl: z.url().optional(),
-  commit: z.url().optional(),
-  draft: z.boolean(),
-});
+export const logPostSchema = makeLogPostSchema(projectSlugs);
 
 export type LogPost = z.infer<typeof logPostSchema>;
 

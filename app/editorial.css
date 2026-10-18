@@ -142,6 +142,7 @@
 .p2 { grid-column: 9 / span 4; margin-top: clamp(0px, 12vw, 180px); --ar: 3 / 4; }
 .p3 { grid-column: 2 / span 5; --ar: 1 / 1; }
 .p4 { grid-column: 7 / span 6; margin-top: clamp(0px, 6vw, 90px); --ar: 4 / 3; }
+.p5 { grid-column: 2 / span 6; --ar: 16 / 10; }
 .frame {
   position: relative; overflow: hidden;
   aspect-ratio: var(--ar, 4 / 5); max-width: 100%;
@@ -186,6 +187,21 @@
 .plate-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 6px; }
 .plate-links a { text-decoration: none; border-bottom: 1.5px solid currentColor; padding-bottom: 1px; }
 .plate-links a:hover { color: var(--accent-text); }
+.data-note {
+  display: inline-block; margin-left: 10px; padding: 1px 7px; border: 1px solid currentColor;
+  font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; vertical-align: 1px;
+}
+
+/* next up: quieter than the plates, no links */
+.next-up { margin-top: clamp(56px, 8vw, 112px); border-top: 1px solid var(--fg); }
+.next-up h3 { margin: 14px 0 0; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-text); }
+.next-up ul { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px 24px; }
+.next-up li { display: grid; gap: 6px; align-content: start; }
+.next-up .name {
+  font-family: var(--font-archivo), "Arial Narrow", sans-serif; font-weight: 800; font-stretch: 75%;
+  font-size: 1.25rem; line-height: 1.05; text-transform: uppercase;
+}
+.next-up .what { color: var(--muted-text); font-size: 0.875rem; line-height: 1.45; }
 
 /* statement + process rail */
 .statement { background: var(--accent-band); color: var(--on-accent); }
@@ -300,6 +316,11 @@
   .plates .p1 { --ar: 1 / 1; }
   .plates .p2 { width: 84%; justify-self: end; }
   .plates .p3 { width: 90%; }
+  .plates .p4 { width: 90%; justify-self: end; }
+  .plates .p5 { --ar: 4 / 3; }
+  /* planned plates hold an outline sketch, not data: keep them short */
+  .plates .is-planned { width: 100%; --ar: 16 / 10; }
+  .next-up ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .panel { grid-template-columns: minmax(0, 1fr); }
   .about { grid-template-columns: repeat(2, minmax(0, 1fr)); }
