@@ -5,13 +5,13 @@ export const site = {
   firstName: "Olu",
   lastName: "Akele",
   title: "AI product builder",
-  roleLead: "I build AI that",
-  roleEmphasis: "multiplies output",
+  roleLead: "Built to multiply output.",
+  roleEmphasis: "AI-built, eval-proven.",
   description:
     "Olu Akele uses AI to build solutions that multiply what a team can ship, lift performance and solve real customer problems, then proves each one with evals.",
   url: "https://oluakele.com",
   pitch:
-    "I use AI to build solutions that multiply what a team can ship, lift performance, and solve the customer problem in front of them. Every build is measured with evals and documented in public.",
+    "I build solutions that multiply what a team can ship, lift performance, and solve the customer problem in front of them. Every build is measured with evals and documented in public, so the results are honest and the work moves faster.",
   focus: "AI-built products, agents, evals",
   statement: {
     before: "I use AI to build what a team couldn't ship alone, then prove it with an",

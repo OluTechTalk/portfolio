@@ -71,7 +71,7 @@
   font-family: var(--font-archivo), "Arial Narrow", sans-serif; font-weight: 800; font-stretch: 75%;
   font-size: clamp(1.5rem, 3.2vw, 2.75rem); line-height: 1; text-transform: uppercase;
 }
-.role span { color: var(--accent-text); }
+.role span { color: var(--accent-text); white-space: nowrap; }
 
 /* photo slots */
 .slot {
@@ -172,6 +172,7 @@
 .tag span { font-family: var(--font-utility), monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; }
 
 .plate figcaption { display: grid; gap: 6px; margin-top: 16px; }
+.plate-caption { margin: 10px 0 0; max-width: 62ch; color: var(--muted-text); font-size: 0.75rem; line-height: 1.5; }
 .cap-top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .cap-top h3 {
   margin: 0; font-family: var(--font-archivo), "Arial Narrow", sans-serif; font-weight: 800; font-stretch: 75%;

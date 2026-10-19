@@ -32,7 +32,11 @@ export type Project = {
   bet?: string;
   result?: string; // planned builds: what will be measured, no numbers
   metric?: { value: string; label: string }; // the plate tag; measured only
-  plate?: { artifact: PlateArtifact; color: "amber" | "sage" | "ink" | "buff" };
+  plate?: {
+    artifact: PlateArtifact;
+    color: "amber" | "sage" | "ink" | "buff";
+    caption?: string; // what the chart measures, shown under it
+  };
   headline?: string; // the eval number, e.g. "Agent shopping success 41% → 88%"
   proofStat?: { value: string; label: string }; // short form for the home proof strip
   tags: string[]; // "MCP", "Shopify", "Evals", "Product strategy", ... (up to 4)
@@ -73,13 +77,16 @@ export const projects: Project[] = [
     status: "in-progress",
     build: 1,
     kind: "Agent-ready storefront",
-    meta: "Claude Code + MCP + Shopify / agent-ready storefront",
+    meta: "AI agents + MCP + Shopify / agent-ready storefront",
     problem:
       "AI shopping agents skip products when catalog data is vague or missing, and merchants can't see the gap.",
     bet: "Audit every product for agents, fix it with a human approving each change, then measure real agent shopping before and after.",
     result:
-      "Readiness 94.1 to 98.3, and 0 wrong products bought across 360 agent shopping sessions.",
-    metric: { value: "0 wrong buys", label: "360 AI agent shopping sessions" },
+      "105 approved fixes took agent-ready products from 78% to 99.3%. In a 360-session shopping test across both catalogs, the AI agent never bought the wrong product.",
+    metric: {
+      value: "99.3% agent-ready",
+      label: "up from 78% after 105 approved fixes",
+    },
     plate: {
       artifact: {
         type: "bars",
@@ -89,8 +96,11 @@ export const projects: Project[] = [
         unit: "%",
       },
       color: "amber",
+      caption:
+        "Share of products an AI shopping agent can read fully. Before: the original catalog. After: 105 fixes, each approved by a person.",
     },
-    headline: "0 wrong products in 360 agent sessions · readiness 94.1 → 98.3",
+    headline:
+      "Agent-ready products 78% → 99.3% · 0 wrong buys in 360 agent shopping sessions",
     proofStat: {
       value: "0",
       label: "wrong products bought in 360 ShelfReady agent eval sessions",
@@ -110,7 +120,7 @@ export const projects: Project[] = [
     status: "planned",
     build: 2,
     kind: "Eval harness",
-    meta: "Claude Code + Claude API + Python / eval harness",
+    meta: "LLM + RAG + Python / eval harness",
     problem:
       "AI-drafted support replies read well and still get facts wrong, and nobody can say how often.",
     bet: "Build the eval set first, then change one prompt at a time and keep only what moves the score.",
@@ -129,7 +139,7 @@ export const projects: Project[] = [
     status: "planned",
     build: 3,
     kind: "Prioritization tool",
-    meta: "Claude Code + Artifact / prioritization tool",
+    meta: "Interactive tool / prioritization",
     problem:
       "Every request feels urgent and there is one team's worth of capacity.",
     bet: "Score each request by expected gain per engineering week and draw the capacity line in public.",
@@ -148,7 +158,7 @@ export const projects: Project[] = [
     status: "planned",
     build: 4,
     kind: "Grounded answers",
-    meta: "Claude API / grounded answers + abstention",
+    meta: "LLM + RAG / grounded answers",
     problem:
       "Allergen answers come from menus, recipes and memory, and those sources don't always agree.",
     bet: "Answer only from the restaurant's own sources, and send the guest to the kitchen whenever they conflict.",
@@ -167,7 +177,7 @@ export const projects: Project[] = [
     status: "planned",
     build: 5,
     kind: "Cost and quality",
-    meta: "Claude API + Python / cost and quality",
+    meta: "LLM routing + Python / cost and quality",
     problem:
       "Sending every request to the largest model makes each task too expensive to price.",
     bet: "Send easy requests to a small model, escalate hard ones, and score both with Red Pen's eval set.",

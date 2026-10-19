@@ -13,7 +13,7 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 - Waiting on Olu: Red Pen posts need `commit` as a URL before they import; LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"
 
 ## Positioning (updated Oct 17)
-- **Role line:** "I build AI that multiplies output" (title: AI product builder). Olu uses AI to build solutions that multiply output and performance and address customer needs. "Forward deployed PM" is no longer the headline.
+- **Role line:** "Built to multiply output. AI-built, eval-proven." (Oct 18; title: AI product builder). Olu uses AI to build solutions that multiply output and performance and address customer needs. "Forward deployed PM" is no longer the headline.
 - **No job-search signal** in public UI (no "Open to PM roles"); the top bar shows "Now building" instead.
 - **Both halves, every time.** Each project and each log entry shows the PM thinking (who it's for, the problem, the trade-offs, the roadmap) *and* the builder proof (what shipped, the eval number, what broke). Never one without the other.
 - **Differentiator:** a PM who builds, measures with evals, and documents every step in public.

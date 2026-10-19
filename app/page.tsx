@@ -152,6 +152,7 @@ export default async function Home() {
                   </div>
                   <PlateArt artifact={p.plate!.artifact} />
                 </div>
+                {p.plate!.caption && <p className="plate-caption mono">{p.plate!.caption}</p>}
                 <figcaption>
                   <div className="cap-top">
                     <h3>{href ? <Link href={href}>{projectName(p.slug)}</Link> : projectName(p.slug)}</h3>
