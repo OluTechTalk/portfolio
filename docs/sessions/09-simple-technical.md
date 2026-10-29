@@ -25,3 +25,14 @@
 - Chart: values now sit inside the bars and the bars top out lower, so the tag never covers a number; the cropped "Products agent-ready" label is gone (the caption says it). The chart has a text alternative now.
 - Fixed along the way: `.tag span` and `.track span` also styled the new inner spans (tiny tag, double ticker padding); scoped to direct children. The case study's "Built with" row reads "What it is" in Simple.
 - Lighthouse after Part 2 (live): mobile home 93, about 96, log 99, post 92, case study 91; desktop 98–100 except /log 73 with CLS 0.503. Cause: before the web fonts load, the wider fallback font plus the new switch made the header wrap at ~1350px, then unwrap. Fix: below 1500px the switch hides its "Explain it:" prefix (the accessible name keeps it) and the header gap is 24px. Local desktop: /log 99, CLS 0.
+
+## Part 3: Off the clock
+- `content/off-the-clock.ts` + `components/off-the-clock.tsx`: Running, New York Giants, Tottenham Hotspur. Home (above Contact) uses the short copy; /about has a fuller version. Team colors and type only, no logos or crests.
+- Running: Olu's line (Oct 28), short on home, long on /about. Spurs: the brief's copy; /about adds the Bilbao score and the 2008 League Cup. Giants: Super Bowl XLVI, Feb 5, 2012.
+- `components/days-since.tsx`: the Giants counter. Server HTML and hydration show "—", then the browser fills in whole days to the visitor's local today (5,379 on Oct 28, 2026) and refreshes every minute.
+- Draft log post `portfolio-ep06-two-audiences` (draft: true) about designing one site for two readers.
+- Checks: lint, typecheck, build; screenshots at 1440 and 375, light and dark, Simple and Technical.
+
+## Next
+- Olu: edit and approve the Ep06 draft (it mentions his wife's feedback; keep or cut), then flip `draft: false`.
+- Recheck About and case study mobile performance on pagespeed.web.dev (this laptop's mobile runs swing 15+ points).

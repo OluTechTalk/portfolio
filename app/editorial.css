@@ -358,6 +358,24 @@ main { transition: opacity 0.16s ease; }
 .proof-role .u-link { margin-left: auto; }
 .proof-text { font-size: clamp(1rem, 1.4vw, 1.1875rem); line-height: 1.45; max-width: 60ch; }
 
+/* off the clock: team colors and type only, no logos */
+.otc { list-style: none; margin: clamp(28px, 4vw, 56px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.otc-card { display: grid; align-content: start; gap: 16px; padding: clamp(20px, 2.4vw, 32px); min-height: 100%; }
+.otc-running { background: var(--plate-amber); color: var(--quill); }
+.otc-giants { background: #0b2265; color: #fff; border-top: 8px solid #a71930; }
+.otc-spurs { background: #132257; color: #fff; }
+.otc-label { font-weight: 500; }
+.otc-big {
+  margin: 0; font-family: var(--font-archivo), "Arial Narrow", sans-serif; font-weight: 900; font-stretch: 62%;
+  font-size: clamp(2.5rem, 4.6vw, 4.25rem); line-height: 0.9; text-transform: uppercase;
+}
+.otc-counter { margin: 0; display: grid; gap: 8px; }
+.otc-counter .otc-big { font-variant-numeric: tabular-nums; }
+.otc-text { margin: 0; font-size: 1.0625rem; line-height: 1.5; max-width: 46ch; }
+.about-otc { margin-top: clamp(56px, 8vw, 112px); }
+.about-otc h2 { font-size: clamp(2.5rem, 7vw, 5.5rem); }
+@media (max-width: 800px) { .otc { grid-template-columns: minmax(0, 1fr); } }
+
 /* contact (site footer) */
 .contact { background: var(--ink-bg); color: var(--ink-fg); }
 .contact h2 { font-size: clamp(3.5rem, 13vw, 12rem); max-width: 12ch; }

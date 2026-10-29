@@ -1,0 +1,36 @@
+---
+draft: true
+slug: portfolio-ep06-two-audiences
+project: portfolio
+episode: 6
+title: "One site, two readers: adding a Simple / Technical switch"
+date: 2026-10-28
+summary: "My wife read the portfolio and said it was too technical. Instead of choosing between her and an engineer, I gave the site a switch: Simple by default, Technical one tap away, with every number unchanged."
+summarySimple: "My wife said my website was too technical. So I gave it a switch: plain English by default, and the technical details one tap away. No number changed."
+pmTakeaway: "When two audiences need different things, don't average the copy. Pick a default for the reader you're losing, and give the other one a fast way in."
+buildTakeaway: "Render both versions and let CSS pick, set before the first paint. No flash, no hydration mismatch, and the page still reads with JavaScript off."
+metric: "12 Proof numbers explained in plain words; 0 numbers changed"
+commit: "https://github.com/OluTechTalk/portfolio/commit/89e04f4ca9eda1a30dc37071edfe5e2c7b6b67c4"
+---
+
+**The goal.** My wife read oluakele.com and said she couldn't tell what I do. "AI-built, eval-proven" meant nothing to her, and neither did "LLM + RAG + Python." She's exactly the reader I was losing: smart, curious, not technical. But the engineers and hiring managers who need the detail are real readers too. The goal was a site anyone understands in 30 seconds, without hiding the depth.
+
+**The product call.** I didn't water the copy down for everyone, and I didn't hide jargon behind "learn more" links. I added a switch: **Explain it: Simply · Technically**. Simple is the default, because the reader you're losing gets the default. Technical keeps the original wording word for word, and `?view=technical` opens it directly, so I can send engineers a link. Light and dark mode stay separate, because a dark-mode reader isn't asking for more jargon.
+
+One rule held the whole way: never change a number, only explain it. Every Proof result kept its figure and got a one-line plain meaning underneath.
+
+**What I built.**
+- A content model where any piece of copy can be one string (same for everyone) or a `{ simple, technical }` pair, so no copy lives in components
+- Both versions rendered into the page, with CSS showing one; a tiny script picks the view before the first paint, so there's no flash and the page still reads with JavaScript off
+- Glossary tooltips for the few terms that stay in Simple (eval, agent, A/B test), shown only in Simple
+- Plain versions of every card, the process steps, the About page and all 9 log summaries, from an audit table I edited before anything shipped
+- An "In plain English" box at the top of the case study
+
+**What broke.**
+- Old CSS rules styled every `span` inside the case-study tag and the ticker. The new inner spans picked them up, shrinking the headline number to label size. I scoped the rules to direct children.
+- The new switch made the header just wide enough to wrap while the web fonts were still loading, then unwrap once they arrived. That pushed the whole build log page down: a layout shift score of 0.503 on desktop. Hiding the "Explain it:" prefix on laptop widths kept the header on one line, and the shift went to 0.
+- The chart's "99.3% agent-ready" tag could sit on top of the 99.3% bar label on narrow screens. The values now sit inside the bars.
+
+**The number.** 12 Proof results got plain meanings, and 0 numbers changed. Accessibility stayed at 100 on every page.
+
+**Next episode.** Back to building: Red Pen's eval results.

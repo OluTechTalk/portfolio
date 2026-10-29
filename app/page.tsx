@@ -3,9 +3,11 @@ import Link from "next/link";
 
 import { FitName } from "@/components/fit-name";
 import { PlateArt } from "@/components/plate-art";
+import { OffTheClock } from "@/components/off-the-clock";
 import { ProcessRail } from "@/components/process-rail";
 import { Txt } from "@/components/txt";
 import { career } from "@/content/career";
+import { offTheClockHeading, offTheClockNote } from "@/content/off-the-clock";
 import { dataNoteLabel, earlierWork, projectName, projects } from "@/content/projects";
 import { process, site, ticker, toolkit } from "@/content/site";
 import { getCaseStudies } from "@/lib/case-studies";
@@ -378,6 +380,17 @@ export default async function Home() {
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* 8. Off the clock (just above Contact, which is the site footer) */}
+      <section className="section wrap" id="off-the-clock" aria-labelledby="otc-heading">
+        <div className="sec-head">
+          <h2 className="display" id="otc-heading">
+            {offTheClockHeading}
+          </h2>
+          <span className="mono">{offTheClockNote}</span>
+        </div>
+        <OffTheClock />
       </section>
     </main>
   );

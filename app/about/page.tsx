@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { OffTheClock } from "@/components/off-the-clock";
 import { Txt } from "@/components/txt";
+import { offTheClockHeading } from "@/content/off-the-clock";
 import { aboutBio, site } from "@/content/site";
 import { text } from "@/lib/copy";
 import sidePhoto from "@/public/photos/olu-side.jpg";
@@ -79,6 +81,13 @@ export default function AboutPage() {
           </p>
         </div>
       </div>
+
+      <section className="about-otc" aria-labelledby="otc-heading">
+        <h2 className="display" id="otc-heading">
+          {offTheClockHeading}
+        </h2>
+        <OffTheClock full />
+      </section>
     </main>
   );
 }
