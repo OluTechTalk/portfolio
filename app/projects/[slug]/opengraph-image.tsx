@@ -3,6 +3,7 @@ import { ImageResponse } from "next/og";
 import { projects } from "@/content/projects";
 import { site } from "@/content/site";
 import { getCaseStudies, getCaseStudy } from "@/lib/case-studies";
+import { text } from "@/lib/copy";
 
 export const alt = "Case study";
 export const size = { width: 1200, height: 630 };
@@ -60,7 +61,7 @@ export default async function Image({
                 display: "flex",
               }}
             >
-              {project.headline ?? project.oneLiner}
+              {text(project.headline ?? project.oneLiner)}
             </div>
           )}
         </div>

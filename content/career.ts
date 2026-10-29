@@ -5,9 +5,12 @@
 // Source of truth (Olu's call, Oct 17): Oluwaseye_Akele_Resume_CO.pdf. Every
 // number here must match it. Lead with the AI results that multiply output.
 
+import type { Copy } from "@/lib/copy";
+
 export type CareerResult = {
   value: string; // the headline number, as shown
-  text: string; // the result in one sentence, from the résumé bullet
+  text: Copy; // the result in one sentence, from the résumé bullet
+  meaning?: string; // Simple view only: what the number means, in one plain line
 };
 
 export type CareerRole = {

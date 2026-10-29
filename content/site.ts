@@ -10,8 +10,13 @@ export const site = {
   description:
     "Olu Akele uses AI to build solutions that multiply what a team can ship, lift performance and solve real customer problems, then proves each one with evals.",
   url: "https://oluakele.com",
-  pitch:
-    "I build solutions that multiply what a team can ship, lift performance, and solve the customer problem in front of them. Every build is measured with evals and documented in public, so the results are honest and the work moves faster.",
+  // Copy fields can be { simple, technical } (lib/copy.ts); Simple is the default view.
+  pitch: {
+    simple:
+      "I'm a product manager who builds with AI. I take messy, complicated problems, make them simple, build the fix, and test it so the results are real, not just a nice demo.",
+    technical:
+      "I build solutions that multiply what a team can ship, lift performance, and solve the customer problem in front of them. Every build is measured with evals and documented in public, so the results are honest and the work moves faster.",
+  },
   focus: "AI-built products, agents, evals",
   statement: {
     before: "I use AI to build what a team couldn't ship alone, then prove it with an",

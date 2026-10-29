@@ -35,7 +35,7 @@
   gap: 12px 32px; padding-top: 20px; padding-bottom: 20px;
 }
 .top nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
-.top-right { display: inline-flex; align-items: center; gap: 16px; }
+.top-right { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
 .avail { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
 .avail:hover { text-decoration: underline; text-underline-offset: 4px; }
 .dot {
@@ -51,6 +51,68 @@
   border: 1.5px solid currentColor; background: transparent; color: inherit; cursor: pointer;
 }
 .theme-btn:hover { background: var(--signal); border-color: var(--signal); color: var(--quill); }
+
+/* two ways to read (docs/REDESIGN.md): Simple unless <html data-view="technical"> */
+:root:not([data-view="technical"]) .v-t,
+:root[data-view="technical"] .v-s { display: none; }
+main { transition: opacity 0.16s ease; }
+.view-fading main { opacity: 0; }
+
+.view-switch-wrap { position: relative; display: inline-flex; }
+.view-switch {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 14px;
+  border: 1.5px solid currentColor; border-radius: 999px; background: transparent; color: inherit;
+  font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer;
+}
+.view-switch:hover { border-color: var(--accent-text); }
+.vs-label { color: var(--muted-text); }
+.vs-opt { color: var(--muted-text); }
+:root:not([data-view="technical"]) .vs-simple,
+:root[data-view="technical"] .vs-technical { color: inherit; font-weight: 500; }
+.vs-track {
+  position: relative; width: 30px; height: 16px; border-radius: 999px; flex-shrink: 0;
+  border: 1.5px solid currentColor;
+}
+.vs-thumb {
+  position: absolute; top: 2px; left: 2px; width: 9px; height: 9px; border-radius: 50%;
+  background: currentColor; transition: transform 0.2s ease;
+}
+:root[data-view="technical"] .vs-thumb { transform: translateX(14px); background: var(--signal); }
+.view-hint {
+  display: none; position: absolute; top: calc(100% + 10px); right: 0; z-index: 20;
+  align-items: center; gap: 10px; padding: 8px 8px 8px 12px; white-space: nowrap;
+  background: var(--fg); color: var(--bg); text-transform: none; letter-spacing: 0.02em;
+}
+.view-hint::before {
+  content: ""; position: absolute; top: -6px; right: 40px; border: 6px solid transparent;
+  border-top: 0; border-bottom-color: var(--fg);
+}
+:root[data-hint] .view-hint { display: inline-flex; }
+.view-hint button {
+  width: 24px; height: 24px; border: 0; background: transparent; color: inherit; cursor: pointer;
+  font-size: 1rem; line-height: 1;
+}
+
+/* glossary terms (Simple only) */
+.term-wrap { position: relative; display: inline; }
+.term {
+  font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit;
+  background: none; border: 0; padding: 0; cursor: help;
+  text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+}
+.tip {
+  display: none; position: absolute; left: 0; bottom: calc(100% + 8px); z-index: 30;
+  width: max-content; max-width: min(260px, 70vw); padding: 8px 10px;
+  background: var(--fg); color: var(--bg);
+  font-family: var(--font-body), sans-serif; font-size: 0.875rem; font-weight: 400; font-stretch: 100%;
+  line-height: 1.4; letter-spacing: 0; text-transform: none; text-align: left; white-space: normal;
+}
+.term-wrap:hover .tip, .term-wrap:focus-within .tip, .term-wrap[data-open] .tip { display: block; }
+.term-wrap[data-dismissed] .tip { display: none; }
+
+/* Proof: one plain line per number, Simple only */
+.proof-text .meaning { display: block; margin-top: 6px; color: var(--muted-text); font-size: 0.9375rem; }
+:root[data-view="technical"] .proof-text .meaning { display: none; }
 
 /* hero */
 .hero { padding-top: clamp(16px, 4vw, 48px); padding-bottom: clamp(40px, 6vw, 88px); }
@@ -308,6 +370,8 @@
 .js .rv.in { transform: none; }
 
 @media (max-width: 800px) {
+  .view-hint { left: 0; right: auto; white-space: normal; max-width: calc(100vw - 48px); }
+  .view-hint::before { right: auto; left: 40px; }
   .hero-top { grid-template-columns: minmax(0, 1fr); }
   .hero-top .slot { width: min(70%, 300px); justify-self: end; }
   .hero-foot { grid-template-columns: minmax(0, 1fr); align-items: start; }
@@ -337,6 +401,7 @@
   .colophon { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
+  main, .vs-thumb { transition: none !important; }
   .dot, .badge .spin, .track { animation: none !important; }
   .ch, .rv, .rail button, .ruled .row { transition: none !important; }
   .js .rv { transform: none; }

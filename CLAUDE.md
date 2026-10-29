@@ -6,8 +6,8 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: **v2 live** + session 08: new build list (Red Pen, Roadmap scorer, allergen assistant, Model router + Next up row), `dataNote`, `npm run import-posts`
-- Last session: 08-add-builds
+- Phase: **v2 live**; session 09 in progress (docs/REDESIGN.md): Part 1 Simple/Technical switch live; Part 2 Simple copy (waiting on Olu's table edits); Part 3 Off the clock
+- Last session: 09-simple-technical
 - Next target: ShelfReady Ep08 (P6 Ship) → Loom as videoUrl, case study from its docs/CASE_STUDY.md, Groq results, Ep08 + launch posts
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
 - Waiting on Olu: Red Pen posts need `commit` as a URL before they import; LinkedIn series per docs/posts/SCHEDULE.md (send URLs → linkedinUrl); PageSpeed mobile score; résumé download on hold; Wherewise "Live soon"

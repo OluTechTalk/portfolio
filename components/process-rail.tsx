@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 
-type Step = { title: string; line: string; artifact: string };
+import { Txt } from "@/components/txt";
+import type { Copy } from "@/lib/copy";
+
+type Step = { title: string; line: Copy; artifact: Copy };
 
 // Six-step process rail. The selected step is inverted and the panel below
 // announces the change. Server-rendered with step 1 selected, so it reads
@@ -29,8 +32,8 @@ export function ProcessRail({ steps }: { steps: readonly Step[] }) {
       <div className="panel" aria-live="polite">
         <h3>{step.title}</h3>
         <div>
-          <p>{step.line}</p>
-          <span className="mono artifact">Artifact: {step.artifact}</span>
+          <p><Txt c={step.line} /></p>
+          <span className="mono artifact">Artifact: <Txt c={step.artifact} /></span>
         </div>
       </div>
     </>

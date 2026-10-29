@@ -51,6 +51,10 @@ export const viewport: Viewport = {
 // Runs before first paint: the saved choice wins, otherwise follow the system
 // (and keep following it live until the visitor picks a theme). Also marks the
 // page as JS-capable so scroll reveals can start (content shows without JS).
+// The reading view (docs/REDESIGN.md) is separate from the theme: ?view= wins
+// (and is remembered), then the saved choice, then Simple. data-hint shows the
+// one-time "Flip this" hint until the visitor flips or dismisses it.
+const viewScript = `(function(){try{var d=document.documentElement,v=null,s=null;try{v=new URLSearchParams(location.search).get("view")}catch(e){}try{s=localStorage.getItem("view-hint");if(v==="technical"||v==="simple")localStorage.setItem("view",v);else v=localStorage.getItem("view")}catch(e){}d.setAttribute("data-view",v==="technical"?"technical":"simple");if(!s)d.setAttribute("data-hint","")}catch(e){}})()`;
 const themeScript = `(function(){try{var d=document.documentElement;d.classList.add("js");var m=matchMedia("(prefers-color-scheme: dark)");function a(){var t=null;try{t=localStorage.getItem("theme")}catch(e){}var k=t?t==="dark":m.matches;d.classList.toggle("dark",k);d.style.colorScheme=k?"dark":"light"}a();m.addEventListener("change",a)}catch(e){}})()`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -62,6 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: viewScript }} />
       </head>
       <body className="flex min-h-full flex-col">
         <SiteHeader />

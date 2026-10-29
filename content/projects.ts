@@ -19,25 +19,27 @@ export const dataNoteLabel: Record<DataNote, string> = {
   simulated: "Simulated",
 };
 
+import type { Copy } from "@/lib/copy";
+
 export type Project = {
   slug: string; // "shelfready"
   title: string; // "ShelfReady — Agent-Ready Storefront"
-  oneLiner: string; // one sentence, plain language
-  customer: string; // who it's for, e.g. "Shopify merchants selling to AI shopping agents"
+  oneLiner: Copy; // one sentence, plain language
+  customer: Copy; // who it's for, e.g. "Shopify merchants selling to AI shopping agents"
   status: "shipped" | "in-progress" | "planned" | "next";
   build?: number; // build order: 1 = ShelfReady
-  kind?: string; // short type for the Index, e.g. "Agent-ready storefront"
-  meta?: string; // mono meta line on the plate: tools / type of work
-  problem?: string;
-  bet?: string;
-  result?: string; // planned builds: what will be measured, no numbers
-  metric?: { value: string; label: string }; // the plate tag; measured only
+  kind?: Copy; // short type for the Index, e.g. "Agent-ready storefront"
+  meta?: Copy; // mono meta line on the plate: tools / type of work
+  problem?: Copy;
+  bet?: Copy;
+  result?: Copy; // planned builds: what will be measured, no numbers
+  metric?: { value: Copy; label: Copy }; // the plate tag; measured only
   plate?: {
     artifact: PlateArtifact;
     color: "amber" | "sage" | "ink" | "buff";
-    caption?: string; // what the chart measures, shown under it
+    caption?: Copy; // what the chart measures, shown under it
   };
-  headline?: string; // the eval number, e.g. "Agent shopping success 41% → 88%"
+  headline?: Copy; // the eval number, e.g. "Agent shopping success 41% → 88%"
   proofStat?: { value: string; label: string }; // short form for the home proof strip
   tags: string[]; // "MCP", "Shopify", "Evals", "Product strategy", ... (up to 4)
   dataNote?: DataNote; // where the data came from; set once a build has results
@@ -77,12 +79,28 @@ export const projects: Project[] = [
     status: "in-progress",
     build: 1,
     kind: "Agent-ready storefront",
-    meta: "AI agents + MCP + Shopify / agent-ready storefront",
-    problem:
-      "AI shopping agents skip products when catalog data is vague or missing, and merchants can't see the gap.",
-    bet: "Audit every product for agents, fix it with a human approving each change, then measure real agent shopping before and after.",
-    result:
-      "105 approved fixes took agent-ready products from 78% to 99.3%. In a 360-session shopping test across both catalogs, the AI agent never bought the wrong product.",
+    meta: {
+      simple: "Helping online stores get found by AI shopping assistants",
+      technical: "AI agents + MCP + Shopify / agent-ready storefront",
+    },
+    problem: {
+      simple:
+        "More people now ask an AI assistant to shop for them. When a product's details are vague or missing, the assistant skips it, and the store never knows why.",
+      technical:
+        "AI shopping agents skip products when catalog data is vague or missing, and merchants can't see the gap.",
+    },
+    bet: {
+      simple:
+        "Check every product the way an AI shopper would, fix what's missing, and have a person approve each change. Then test real AI shopping before and after.",
+      technical:
+        "Audit every product for agents, fix it with a human approving each change, then measure real agent shopping before and after.",
+    },
+    result: {
+      simple:
+        "Almost every product is now fully readable by an AI shopper: 99.3%, up from 78%. In 360 test shopping trips, the AI never bought the wrong item.",
+      technical:
+        "105 approved fixes took agent-ready products from 78% to 99.3%. In a 360-session shopping test across both catalogs, the AI agent never bought the wrong product.",
+    },
     metric: {
       value: "99.3% agent-ready",
       label: "up from 78% after 105 approved fixes",

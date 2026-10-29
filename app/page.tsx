@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FitName } from "@/components/fit-name";
 import { PlateArt } from "@/components/plate-art";
 import { ProcessRail } from "@/components/process-rail";
+import { Txt } from "@/components/txt";
 import { career } from "@/content/career";
 import { dataNoteLabel, earlierWork, projectName, projects } from "@/content/projects";
 import { process, site, ticker, toolkit } from "@/content/site";
@@ -52,7 +53,7 @@ export default async function Home() {
           <div className="hero-name" id="hero-name">
             <FitName first={site.firstName} last={site.lastName} />
             <p className="role">
-              {site.roleLead} <span>{site.roleEmphasis}</span>
+              <Txt c={site.roleLead} /> <span><Txt c={site.roleEmphasis} /></span>
             </p>
           </div>
           <div className="slot arch">
@@ -69,7 +70,7 @@ export default async function Home() {
         </div>
         <div className="hero-foot">
           <div className="hero-copy">
-            <p>{site.pitch}</p>
+            <p className="pitch"><Txt c={site.pitch} /></p>
             <div className="hero-cta">
               <a href={site.links.booking} {...external} className="btn btn-solid">
                 Book a call ↗
@@ -82,7 +83,7 @@ export default async function Home() {
           <dl className="facts mono">
             <div>
               <dt>Focus</dt>
-              <dd>{site.focus}</dd>
+              <dd><Txt c={site.focus} /></dd>
             </div>
             {latest && (
               <div>
@@ -147,12 +148,16 @@ export default async function Home() {
               <figure key={p.slug} className={`plate p${i + 1} rv${p.metric ? "" : " is-planned"}`}>
                 <div className={`frame ${p.plate!.color}`}>
                   <div className="tag">
-                    <b>{p.metric?.value ?? "Planned"}</b>
-                    <span>{p.metric?.label ?? `Build ${pad(p.build!)}`}</span>
+                    <b>{p.metric ? <Txt c={p.metric.value} /> : "Planned"}</b>
+                    <span>{p.metric ? <Txt c={p.metric.label} /> : `Build ${pad(p.build!)}`}</span>
                   </div>
                   <PlateArt artifact={p.plate!.artifact} />
                 </div>
-                {p.plate!.caption && <p className="plate-caption mono">{p.plate!.caption}</p>}
+                {p.plate!.caption && (
+                  <p className="plate-caption mono">
+                    <Txt c={p.plate!.caption} />
+                  </p>
+                )}
                 <figcaption>
                   <div className="cap-top">
                     <h3>{href ? <Link href={href}>{projectName(p.slug)}</Link> : projectName(p.slug)}</h3>
@@ -161,21 +166,21 @@ export default async function Home() {
                     </span>
                   </div>
                   <span className="mono meta">
-                    {p.meta}
+                    <Txt c={p.meta} />
                     {p.dataNote && <span className="data-note">{dataNoteLabel[p.dataNote]}</span>}
                   </span>
                   <dl className="cf">
                     <div>
                       <dt className="mono">Problem</dt>
-                      <dd>{p.problem}</dd>
+                      <dd><Txt c={p.problem} /></dd>
                     </div>
                     <div>
                       <dt className="mono">Bet</dt>
-                      <dd>{p.bet}</dd>
+                      <dd><Txt c={p.bet} /></dd>
                     </div>
                     <div>
                       <dt className="mono">Result</dt>
-                      <dd>{p.result}</dd>
+                      <dd><Txt c={p.result} /></dd>
                     </div>
                   </dl>
                   {(href || p.demoUrl || p.repoUrl || p.videoUrl || logs > 0) && (
@@ -215,7 +220,7 @@ export default async function Home() {
               {nextUp.map((p) => (
                 <li key={p.slug}>
                   <span className="name">{p.title}</span>
-                  <span className="what">{p.oneLiner}</span>
+                  <span className="what"><Txt c={p.oneLiner} /></span>
                 </li>
               ))}
             </ul>
@@ -228,8 +233,8 @@ export default async function Home() {
       <section className="statement section" id="process" aria-label="How I work">
         <div className="wrap">
           <p className="big rv">
-            {site.statement.before} <em>{site.statement.emphasis}</em>
-            {site.statement.after}
+            <Txt c={site.statement.before} /> <em><Txt c={site.statement.emphasis} /></em>
+            <Txt c={site.statement.after} />
           </p>
           <p className="rail-label mono">How I run a product. Pick a step</p>
           <ProcessRail steps={process} />
@@ -301,10 +306,13 @@ export default async function Home() {
             </div>
             <ul className="ruled">
               {r.results.map((x) => (
-                <li key={x.value + x.text.slice(0, 12)}>
+                <li key={x.value}>
                   <div className="row">
                     <span className="num">{x.value}</span>
-                    <span className="proof-text">{x.text}</span>
+                    <span className="proof-text">
+                      <Txt c={x.text} />
+                      {x.meaning && <span className="meaning v-s">{x.meaning}</span>}
+                    </span>
                   </div>
                 </li>
               ))}
@@ -324,14 +332,18 @@ export default async function Home() {
         <ul className="ruled">
           {builds.map((p) => {
             const href = caseStudyHref[p.slug];
-            const out = p.metric
-              ? `${p.metric.value} / ${p.metric.label}`
-              : statusLabel[p.status];
+            const out = p.metric ? (
+              <>
+                <Txt c={p.metric.value} /> / <Txt c={p.metric.label} />
+              </>
+            ) : (
+              statusLabel[p.status]
+            );
             const cells = (
               <>
                 <span className="mono">{pad(p.build!)}</span>
                 <span className="name">{projectName(p.slug)}</span>
-                <span className="what">{p.kind}</span>
+                <span className="what"><Txt c={p.kind} /></span>
                 <span className="out mono">{out}</span>
               </>
             );
@@ -352,7 +364,7 @@ export default async function Home() {
               <div className="row hoverable planned">
                 <span className="mono">Next</span>
                 <span className="name">{p.title}</span>
-                <span className="what">{p.kind}</span>
+                <span className="what"><Txt c={p.kind} /></span>
                 <span className="out mono">Planned</span>
               </div>
             </li>

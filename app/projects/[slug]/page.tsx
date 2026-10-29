@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Txt } from "@/components/txt";
 import { dataNoteLabel, projects } from "@/content/projects";
 import { getCaseStudies, getCaseStudy } from "@/lib/case-studies";
 import { formatDate, formatEpisode } from "@/lib/format";
@@ -93,7 +94,7 @@ export default async function CaseStudyPage({
             {study.draft && <span className="pill dashed">Draft</span>}
           </p>
           <h1 className="display page-title">{project.title.split(" — ")[0]}</h1>
-          <p className="lede">{project.oneLiner}</p>
+          <p className="lede"><Txt c={project.oneLiner} /></p>
         </header>
 
         <div className="article-grid">
@@ -102,17 +103,17 @@ export default async function CaseStudyPage({
               {project.headline && (
                 <div className="number">
                   <dt className="mono">Result</dt>
-                  <dd>{project.headline}</dd>
+                  <dd><Txt c={project.headline} /></dd>
                 </div>
               )}
               <div>
                 <dt className="mono">For</dt>
-                <dd>{project.customer}</dd>
+                <dd><Txt c={project.customer} /></dd>
               </div>
               {project.meta && (
                 <div>
                   <dt className="mono">Built with</dt>
-                  <dd>{project.meta}</dd>
+                  <dd><Txt c={project.meta} /></dd>
                 </div>
               )}
             </dl>

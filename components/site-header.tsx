@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ViewSwitch } from "@/components/view-switch";
 import { nav, site } from "@/content/site";
 import { getLatestFeaturedPost } from "@/lib/now-building";
 import { projectName } from "@/content/projects";
@@ -27,6 +28,7 @@ export async function SiteHeader() {
             Now building: {projectName(latest.project)}
           </Link>
         )}
+        <ViewSwitch />
         <ThemeToggle />
       </span>
     </header>

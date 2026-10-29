@@ -3,8 +3,9 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 import { site } from "@/content/site";
+import { text } from "@/lib/copy";
 
-export const alt = `${site.name} / ${site.title}: ${site.roleLead} ${site.roleEmphasis}`;
+export const alt = `${site.name} / ${site.title}: ${text(site.roleLead)} ${text(site.roleEmphasis)}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -44,8 +45,8 @@ export default async function Image() {
               OLU AKELE
             </div>
             <div style={{ display: "flex", flexDirection: "column", fontSize: 46, fontWeight: 700, marginTop: 28, lineHeight: 1.1 }}>
-              <span>{site.roleLead.toUpperCase()}</span>
-              <span style={{ color: C.berry }}>{site.roleEmphasis.toUpperCase()}</span>
+              <span>{text(site.roleLead).toUpperCase()}</span>
+              <span style={{ color: C.berry }}>{text(site.roleEmphasis).toUpperCase()}</span>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", fontSize: 24, letterSpacing: 2 }}>
