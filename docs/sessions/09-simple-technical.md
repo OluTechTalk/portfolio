@@ -33,6 +33,8 @@
 - Draft log post `portfolio-ep06-two-audiences` (draft: true) about designing one site for two readers.
 - Checks: lint, typecheck, build; screenshots at 1440 and 375, light and dark, Simple and Technical.
 
+- Lighthouse after Part 3 (live): accessibility, best practices and SEO 100 on every page. Desktop performance 99–100 (one post run at 81 was noise; two re-runs scored 100). Mobile performance: home 92, about 94, log 98, post 99, case study 97. Home and About sit just under 95 on this laptop, where mobile runs swing a lot.
+
 ## Next
 - Olu: edit and approve the Ep06 draft (it mentions his wife's feedback; keep or cut), then flip `draft: false`.
 - Recheck About and case study mobile performance on pagespeed.web.dev (this laptop's mobile runs swing 15+ points).
