@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Txt } from "@/components/txt";
 import { projectName } from "@/content/projects";
 import { formatDate, formatEpisode } from "@/lib/format";
 import type { LogPost } from "@/lib/log";
@@ -29,8 +30,11 @@ export function LogEntries({ posts }: { posts: LogPost[] }) {
             </span>
             <article className="entry">
               <h2>{post.title}</h2>
-              <p>{post.summary}</p>
-              <dl>
+              {/* Simple: the plain summary only. Technical: summary + takeaways. */}
+              <p>
+                <Txt c={{ simple: post.summarySimple ?? post.summary, technical: post.summary }} />
+              </p>
+              <dl className="v-t">
                 <div>
                   <dt className="mono">PM takeaway</dt>
                   <dd>{post.pmTakeaway}</dd>

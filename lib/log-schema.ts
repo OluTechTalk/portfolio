@@ -20,6 +20,7 @@ export function makeLogPostSchema(projectSlugs: [string, ...string[]]) {
     title: z.string().min(1),
     date: isoDate,
     summary: z.string().min(1),
+    summarySimple: z.string().min(1).optional(), // plain-English summary for the Simple view
     pmTakeaway: z.string().min(1),
     buildTakeaway: z.string().min(1),
     metric: z.string().min(1).optional(),

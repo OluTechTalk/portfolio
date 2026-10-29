@@ -6,7 +6,7 @@ The site's job: in under 60 seconds, a hiring manager should see (1) how Olu thi
 
 ## Current status
 <!-- /end-session updates this block. Keep it to 5 lines. -->
-- Phase: **v2 live**; session 09 in progress (docs/REDESIGN.md): Part 1 Simple/Technical switch live; Part 2 Simple copy (waiting on Olu's table edits); Part 3 Off the clock
+- Phase: **v2 live**; session 09 in progress (docs/REDESIGN.md): Parts 1–2 live (Simple/Technical switch, Simple copy everywhere); Part 3 Off the clock next
 - Last session: 09-simple-technical
 - Next target: ShelfReady Ep08 (P6 Ship) → Loom as videoUrl, case study from its docs/CASE_STUDY.md, Groq results, Ep08 + launch posts
 - Domain: **oluakele.com** (Porkbun). DNS stays at Porkbun; records come from Vercel's Domains page.
@@ -49,6 +49,8 @@ Only stats with a source. Two kinds:
 - **PM career stats (Olu supplies):** e.g. products launched, adoption or revenue impact, team size. Each one needs a role and year next to it, and should match the résumé. Live in `content/career.ts`. Source of truth (Olu, Oct 17): `Oluwaseye_Akele_Resume_CO.pdf`; every number must match it, and the home Proof section leads with its AI results. Never invent placeholder stats.
 
 ## Content model
+**Two ways to read (Oct 28, docs/REDESIGN.md):** copy fields take `Copy = string | { simple, technical }` (lib/copy.ts) and render with `<Txt>`; Simple is the default view, Technical keeps the original wording. Simple copy: plain English, no acronyms, about an 8th-grade reading level, never a changed number. Glossary terms in Simple copy: `[[term]]` or `[[shown|term]]` (content/glossary.ts).
+
 Project data lives in `content/projects.ts` and log posts live in `content/log/*.mdx`. Pages read from these; never hard-code details in components.
 
 ```ts
@@ -75,6 +77,7 @@ export type LogPost = {
   title: string;
   date: string;                 // ISO
   summary: string;              // one sentence, used on cards and for social previews
+  summarySimple?: string;       // plain-English summary for the Simple view of /log
   pmTakeaway: string;           // the product lesson in one line
   buildTakeaway: string;        // the technical lesson in one line
   metric?: string;              // e.g. "150 products seeded, 52 messy"

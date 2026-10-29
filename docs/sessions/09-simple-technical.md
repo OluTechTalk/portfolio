@@ -15,3 +15,12 @@
 - `components/view-switch.tsx`: "Explain it: Simply · Technically", `role="switch"`, styled from `data-view` so it's right before hydration; fade out, swap, fade in (none with reduced motion); clears `?view=` once the visitor flips. One-time hint "Prefer the technical details? Flip this." until flipped or dismissed.
 - Content: copy fields in `projects.ts`, `site.ts` (pitch, focus, role, statement, process steps) and `career.ts` (plus a Simple-only `meaning`) accept Copy. Only the brief's approved examples differ so far: hero paragraph and the ShelfReady card.
 - Checks: lint, typecheck, build. Screenshots at 1440 and 375, light and dark, Simple and Technical. The hint was invisible in dark mode (fixed: inverted colors) and ran off-screen on mobile (fixed: left-anchored). Server HTML has no `data-view`, so the page is Simple without JavaScript.
+- Lighthouse after Part 1 (live, mobile): home 95, log 99, post 97, case study 95, About 87–91; desktop 99–100; accessibility 100 everywhere. A local A/B on /about with and without the switch scored the same range (74–90), so the switch isn't the cause; About's LCP is the bio text, delayed by the shared React startup.
+
+## Part 2: Simple copy
+- Olu approved the audit table as proposed. Simple copy for the hero accent line, Focus, ticker, statement, About strip, every card (subtitle, Problem, Bet, Result, tag, caption), Next up, Index, process steps, the ShelfReady case study (lede, Result box, "For", plus an "In plain English" box in Simple), the About bio (moved to `content/site.ts`), and the log intro.
+- Proof: a plain `meaning` line under each of the 12 numbers, Simple only. No number changed.
+- Log: optional `summarySimple` in post frontmatter (schema updated); Simple rows show it and hide the takeaways; posts themselves stay as written.
+- Glossary terms in use: AI agents (Focus), test/eval (Model router, About), A/B test (Activation flow), assistant/agent (Weekly digest).
+- Chart: values now sit inside the bars and the bars top out lower, so the tag never covers a number; the cropped "Products agent-ready" label is gone (the caption says it). The chart has a text alternative now.
+- Fixed along the way: `.tag span` and `.track span` also styled the new inner spans (tiny tag, double ticker padding); scoped to direct children. The case study's "Built with" row reads "What it is" in Simple.

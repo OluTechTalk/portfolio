@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Txt } from "@/components/txt";
+import type { Dual } from "@/lib/copy";
 import { dataNoteLabel, projects } from "@/content/projects";
 import { getCaseStudies, getCaseStudy } from "@/lib/case-studies";
 import { formatDate, formatEpisode } from "@/lib/format";
@@ -76,7 +77,14 @@ export default async function CaseStudyPage({
   ].filter((l): l is { label: string; href: string } => Boolean(l));
 
   const pad = (n: number) => String(n).padStart(2, "0");
-
+  const plain: [string, Dual][] = [];
+  for (const [label, copy] of [
+    ["Problem", project.problem],
+    ["Bet", project.bet],
+    ["Result", project.result],
+  ] as const) {
+    if (typeof copy === "object") plain.push([label, copy]);
+  }
   return (
     <main className="page wrap">
       <article>
@@ -112,7 +120,9 @@ export default async function CaseStudyPage({
               </div>
               {project.meta && (
                 <div>
-                  <dt className="mono">Built with</dt>
+                  <dt className="mono">
+                    <Txt c={{ simple: "What it is", technical: "Built with" }} />
+                  </dt>
                   <dd><Txt c={project.meta} /></dd>
                 </div>
               )}
@@ -139,6 +149,25 @@ export default async function CaseStudyPage({
           </aside>
 
           <div>
+            {/* Simple view only: the card's Problem / Bet / Result in plain words,
+                before the full write-up (which stays as written). */}
+            {plain.length > 0 && (
+              <section className="plain-box v-s" aria-labelledby="plain-heading">
+                <h2 className="mono" id="plain-heading">
+                  In plain English
+                </h2>
+                <dl>
+                  {plain.map(([label, copy]) => (
+                    <div key={label}>
+                      <dt className="mono">{label}</dt>
+                      <dd>
+                        <Txt c={copy.simple} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            )}
             <div className="prose-ed">
               <Content />
               <h2 id="build-log">Build log</h2>

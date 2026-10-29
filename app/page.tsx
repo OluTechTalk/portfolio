@@ -123,7 +123,7 @@ export default async function Home() {
         <div className="track">
           {tickerItems.map((word, i) => (
             <span key={i}>
-              {word}
+              <Txt c={word} />
               <i>/</i>
             </span>
           ))}
@@ -254,9 +254,7 @@ export default async function Home() {
               About
             </h2>
             <p>
-              Product leader at Visual Comfort &amp; Co., Zillow, Spreetail and
-              Arcadis. Now I build the AI myself: ship it inside the real
-              system, measure it, and write down what broke.
+              <Txt c={site.aboutStrip} />
             </p>
             <Link href="/about" className="btn">
               More about me

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { LogFilter } from "@/components/log-filter";
+import { Txt } from "@/components/txt";
 import { projectName } from "@/content/projects";
+import { site } from "@/content/site";
 import { getPosts } from "@/lib/log";
 
 export const metadata: Metadata = {
@@ -30,8 +32,7 @@ export default async function LogPage() {
         </p>
         <h1 className="display page-title">Build log</h1>
         <p className="lede">
-          The product call, what I built, what broke, and the number. Every
-          episode, written up.
+          <Txt c={site.logIntro} />
         </p>
       </header>
       <LogFilter posts={posts} options={options} />

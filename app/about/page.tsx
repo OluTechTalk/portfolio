@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-import { site } from "@/content/site";
+import { Txt } from "@/components/txt";
+import { aboutBio, site } from "@/content/site";
+import { text } from "@/lib/copy";
 import sidePhoto from "@/public/photos/olu-side.jpg";
 import aboutPhoto from "@/public/photos/olu-about-1.jpg";
 
@@ -12,13 +14,6 @@ export const metadata: Metadata = {
     "Olu Akele turns AI capabilities into measurable outcomes: 9+ years leading product at Visual Comfort & Co., Zillow, Spreetail and Arcadis, now building AI products in public.",
   alternates: { canonical: "/about" },
 };
-
-// Draft bio from Oluwaseye_Akele_Resume_CO (the source of truth); Olu will edit.
-const bio = [
-  "I'm a product leader who turns AI capabilities into measurable business outcomes, and these days I build the AI myself.",
-  "Over 9+ years at Visual Comfort & Co., Zillow, Spreetail and Arcadis, I've run growth, marketplace and catalog products. Most recently I led a custom-trained LLM catalog audit agent adopted by 20 teams, cutting validation and approval from six weeks to 45 minutes, and built the eval framework that took an AI refund agent from 71% to 93% decision accuracy before launch.",
-  "On every build I start with the customer problem, decide what not to build, ship inside the real system, and prove it with evals. Then I write down what broke. ShelfReady is the first build in public, and four more are queued.",
-];
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
@@ -59,8 +54,10 @@ export default function AboutPage() {
         </div>
 
         <div className="prose-ed">
-          {bio.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+          {aboutBio.map((paragraph) => (
+            <p key={text(paragraph).slice(0, 24)}>
+              <Txt c={paragraph} />
+            </p>
           ))}
           <div className="btn-row">
             <a href={site.links.booking} {...external} className="btn btn-solid">

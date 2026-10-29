@@ -5,12 +5,14 @@ import type { PlateArtifact } from "@/content/projects";
 // they'll have, with no numbers (the brief's "real numbers only" rule).
 
 function Bars({ a }: { a: Extract<PlateArtifact, { type: "bars" }> }) {
-  // 0–100% maps to 320px of bar height above a baseline at y=520, leaving
-  // room at the top for the plate tag.
-  const h = (v: number) => (v / 100) * 320;
+  // 0–100% maps to 280px of bar height above a baseline at y=520, and each
+  // value sits inside the top of its bar, so nothing is drawn in the top
+  // third where the plate tag sits, at any width. What the chart measures is
+  // in the plate caption, not in the SVG (the bottom edge gets cropped).
+  const h = (v: number) => (v / 100) * 280;
   const fmt = (v: number) => `${v}${a.unit}`;
   return (
-    <svg viewBox="0 0 800 640" preserveAspectRatio="xMidYMid slice" aria-hidden>
+    <svg viewBox="0 0 800 640" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`${a.label}: ${fmt(a.before)} before, ${fmt(a.after)} after`}>
       <line x1="170" y1="520" x2="630" y2="520" stroke="currentColor" strokeWidth="4" />
       <rect x="210" y={520 - h(a.before)} width="150" height={h(a.before)} fill="currentColor" />
       <rect
@@ -22,16 +24,15 @@ function Bars({ a }: { a: Extract<PlateArtifact, { type: "bars" }> }) {
         stroke="currentColor"
         strokeWidth="5"
       />
-      <text className="big" x="285" y={500 - h(a.before)} fontSize="56" textAnchor="middle">
+      <text className="big c-chip" x="285" y={520 - h(a.before) + 66} fontSize="52" textAnchor="middle">
         {fmt(a.before)}
       </text>
-      <text className="big" x="515" y={500 - h(a.after)} fontSize="56" textAnchor="middle">
+      <text className="big" x="515" y={520 - h(a.after) + 66} fontSize="52" textAnchor="middle">
         {fmt(a.after)}
       </text>
       <g fontSize="17" textAnchor="middle" letterSpacing="1.5">
         <text x="285" y="552">BEFORE</text>
         <text x="515" y="552">AFTER</text>
-        <text x="400" y="592">{a.label.toUpperCase()}</text>
       </g>
     </svg>
   );

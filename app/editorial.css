@@ -110,6 +110,15 @@ main { transition: opacity 0.16s ease; }
 .term-wrap:hover .tip, .term-wrap:focus-within .tip, .term-wrap[data-open] .tip { display: block; }
 .term-wrap[data-dismissed] .tip { display: none; }
 
+/* case study: "In plain English" box, Simple only */
+.plain-box { margin: 0 0 clamp(28px, 4vw, 48px); padding: 18px 20px 6px; border: 1.5px solid var(--fg); }
+.plain-box h2 { margin: 0 0 6px; font-size: 0.75rem; font-weight: 500; }
+.plain-box dl { margin: 0; }
+.plain-box dl div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--rule); }
+.plain-box dt { color: var(--muted-text); padding-top: 3px; }
+.plain-box dd { margin: 0; font-size: 1.0625rem; line-height: 1.5; }
+@media (max-width: 800px) { .plain-box dl div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
 /* Proof: one plain line per number, Simple only */
 .proof-text .meaning { display: block; margin-top: 6px; color: var(--muted-text); font-size: 0.9375rem; }
 :root[data-view="technical"] .proof-text .meaning { display: none; }
@@ -168,12 +177,12 @@ main { transition: opacity 0.16s ease; }
 /* ticker */
 .ticker { background: var(--ink-bg); color: var(--ink-fg); overflow: hidden; padding: 16px 0; }
 .track { display: flex; width: max-content; animation: ed-slide 34s linear infinite; }
-.track span {
+.track > span {
   font-family: var(--font-archivo), "Arial Narrow", sans-serif; font-weight: 900; font-stretch: 62%;
   font-size: clamp(2rem, 5vw, 4rem); line-height: 1; text-transform: uppercase;
   white-space: nowrap; padding-right: 1.4rem;
 }
-.track span i { font-style: normal; color: var(--signal); padding-left: 1.4rem; }
+.track > span i { font-style: normal; color: var(--signal); padding-left: 1.4rem; }
 @keyframes ed-slide { to { transform: translateX(-50%); } }
 
 /* quill-spike edge into a band */
@@ -219,6 +228,7 @@ main { transition: opacity 0.16s ease; }
 .frame.ink .art { color: var(--chip); }
 .art svg { display: block; width: 100%; height: 100%; }
 .art svg text { font-family: var(--font-utility), monospace; fill: currentColor; }
+.art svg text.c-chip { fill: var(--chip); }
 .art svg .big { font-family: var(--font-archivo), "Arial Narrow", sans-serif; font-weight: 800; font-stretch: 62%; }
 .c-chip { fill: var(--chip); }
 .planned-art { opacity: 0.55; }
@@ -231,7 +241,7 @@ main { transition: opacity 0.16s ease; }
   font-family: var(--font-archivo), "Arial Narrow", sans-serif; font-weight: 900; font-stretch: 62%;
   font-size: clamp(1.6rem, 2.4vw, 2.4rem); line-height: 0.9; text-transform: uppercase;
 }
-.tag span { font-family: var(--font-utility), monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.tag > span { font-family: var(--font-utility), monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; }
 
 .plate figcaption { display: grid; gap: 6px; margin-top: 16px; }
 .plate-caption { margin: 10px 0 0; max-width: 62ch; color: var(--muted-text); font-size: 0.75rem; line-height: 1.5; }

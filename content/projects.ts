@@ -73,12 +73,26 @@ export const projects: Project[] = [
   {
     slug: "shelfready",
     title: "ShelfReady — Agent-Ready Storefront",
-    oneLiner:
-      "Makes a Shopify catalog clean and structured enough for AI shopping agents to find, compare and buy from.",
-    customer: "Shopify merchants selling to AI shopping agents",
+    oneLiner: {
+      simple:
+        "Cleans up an online store's product details so AI shopping assistants can find, compare and buy its products.",
+      technical:
+        "Makes a Shopify catalog clean and structured enough for AI shopping agents to find, compare and buy from.",
+    },
+    customer: {
+      simple:
+        "Online store owners whose customers shop with AI assistants",
+      technical:
+        "Shopify merchants selling to AI shopping agents",
+    },
     status: "in-progress",
     build: 1,
-    kind: "Agent-ready storefront",
+    kind: {
+      simple:
+        "Store AI shoppers can read",
+      technical:
+        "Agent-ready storefront",
+    },
     meta: {
       simple: "Helping online stores get found by AI shopping assistants",
       technical: "AI agents + MCP + Shopify / agent-ready storefront",
@@ -102,7 +116,7 @@ export const projects: Project[] = [
         "105 approved fixes took agent-ready products from 78% to 99.3%. In a 360-session shopping test across both catalogs, the AI agent never bought the wrong product.",
     },
     metric: {
-      value: "99.3% agent-ready",
+      value: { simple: "99.3% AI-ready", technical: "99.3% agent-ready" },
       label: "up from 78% after 105 approved fixes",
     },
     plate: {
@@ -114,11 +128,19 @@ export const projects: Project[] = [
         unit: "%",
       },
       color: "amber",
-      caption:
-        "Share of products an AI shopping agent can read fully. Before: the original catalog. After: 105 fixes, each approved by a person.",
+      caption: {
+        simple:
+          "How many products an AI shopping assistant can fully understand. Before: the store as it was. After: 105 fixes, each one checked by a person.",
+        technical:
+          "Share of products an AI shopping agent can read fully. Before: the original catalog. After: 105 fixes, each approved by a person.",
+      },
     },
-    headline:
-      "Agent-ready products 78% → 99.3% · 0 wrong buys in 360 agent shopping sessions",
+    headline: {
+      simple:
+        "Products an AI shopper can fully read: 78% → 99.3%. 0 wrong items bought in 360 test shopping trips.",
+      technical:
+        "Agent-ready products 78% → 99.3% · 0 wrong buys in 360 agent shopping sessions",
+    },
     proofStat: {
       value: "0",
       label: "wrong products bought in 360 ShelfReady agent eval sessions",
@@ -137,12 +159,36 @@ export const projects: Project[] = [
     customer: "Support teams sending AI-drafted replies they can't yet trust",
     status: "planned",
     build: 2,
-    kind: "Eval harness",
-    meta: "LLM + RAG + Python / eval harness",
-    problem:
-      "AI-drafted support replies read well and still get facts wrong, and nobody can say how often.",
-    bet: "Build the eval set first, then change one prompt at a time and keep only what moves the score.",
-    result: "Planned: pass rate per prompt version against a ship gate.",
+    kind: {
+      simple:
+        "Support replies, tested",
+      technical:
+        "Eval harness",
+    },
+    meta: {
+      simple:
+        "A support-reply writer with a built-in grader",
+      technical:
+        "LLM + RAG + Python / eval harness",
+    },
+    problem: {
+      simple:
+        "AI can write support replies that sound great but get facts wrong. Nobody knows how often.",
+      technical:
+        "AI-drafted support replies read well and still get facts wrong, and nobody can say how often.",
+    },
+    bet: {
+      simple:
+        "Write the test first: practice questions with known answers. Then improve the AI one change at a time and keep only what raises the score.",
+      technical:
+        "Build the eval set first, then change one prompt at a time and keep only what moves the score.",
+    },
+    result: {
+      simple:
+        "Planned: a score for each version of the AI, and a bar it must pass before it goes live.",
+      technical:
+        "Planned: pass rate per prompt version against a ship gate.",
+    },
     plate: { artifact: { type: "line" }, color: "sage" },
     tags: ["Evals", "RAG", "Claude API", "Python"],
     repoUrl: "https://github.com/OluTechTalk/redpen",
@@ -156,13 +202,36 @@ export const projects: Project[] = [
     customer: "Product teams with more urgent requests than capacity",
     status: "planned",
     build: 3,
-    kind: "Prioritization tool",
-    meta: "Interactive tool / prioritization",
-    problem:
-      "Every request feels urgent and there is one team's worth of capacity.",
-    bet: "Score each request by expected gain per engineering week and draw the capacity line in public.",
-    result:
-      "Planned: requests in vs commitments out. Example requests will be labeled as examples.",
+    kind: {
+      simple:
+        "Decide what to build next",
+      technical:
+        "Prioritization tool",
+    },
+    meta: {
+      simple:
+        "A tool for deciding what to build next",
+      technical:
+        "Interactive tool / prioritization",
+    },
+    problem: {
+      simple:
+        "Every request feels urgent, but the team can only do so much.",
+      technical:
+        "Every request feels urgent and there is one team's worth of capacity.",
+    },
+    bet: {
+      simple:
+        "Score each request by how much it helps for each week of work, and draw a clear line where the team runs out of time.",
+      technical:
+        "Score each request by expected gain per engineering week and draw the capacity line in public.",
+    },
+    result: {
+      simple:
+        "Planned: how many requests came in and how many the team took on. Sample requests will be labeled as samples.",
+      technical:
+        "Planned: requests in vs commitments out. Example requests will be labeled as examples.",
+    },
     plate: { artifact: { type: "roadmap" }, color: "ink" },
     tags: ["Prioritization", "Artifacts", "Product strategy"],
     order: 3,
@@ -175,11 +244,30 @@ export const projects: Project[] = [
     customer: "Restaurant staff answering guests' allergen questions",
     status: "planned",
     build: 4,
-    kind: "Grounded answers",
-    meta: "LLM + RAG / grounded answers",
-    problem:
-      "Allergen answers come from menus, recipes and memory, and those sources don't always agree.",
-    bet: "Answer only from the restaurant's own sources, and send the guest to the kitchen whenever they conflict.",
+    kind: {
+      simple:
+        "Safe allergy answers",
+      technical:
+        "Grounded answers",
+    },
+    meta: {
+      simple:
+        "Safe answers to allergy questions",
+      technical:
+        "LLM + RAG / grounded answers",
+    },
+    problem: {
+      simple:
+        "Staff answer allergy questions from menus, recipes and memory, and those don't always match.",
+      technical:
+        "Allergen answers come from menus, recipes and memory, and those sources don't always agree.",
+    },
+    bet: {
+      simple:
+        "Answer only from the restaurant's own information. If two sources disagree, say \"ask the kitchen\" instead of guessing.",
+      technical:
+        "Answer only from the restaurant's own sources, and send the guest to the kitchen whenever they conflict.",
+    },
     result:
       "Planned: how often it answers correctly, and how often it says 'ask the kitchen' when it should.",
     plate: { artifact: { type: "sources" }, color: "buff" },
@@ -194,13 +282,36 @@ export const projects: Project[] = [
     customer: "Teams that can't price an AI feature while every request goes to the largest model",
     status: "planned",
     build: 5,
-    kind: "Cost and quality",
-    meta: "LLM routing + Python / cost and quality",
-    problem:
-      "Sending every request to the largest model makes each task too expensive to price.",
-    bet: "Send easy requests to a small model, escalate hard ones, and score both with Red Pen's eval set.",
-    result:
-      "Planned: cost per task before and after, and the quality difference in points.",
+    kind: {
+      simple:
+        "Cheaper AI, same quality",
+      technical:
+        "Cost and quality",
+    },
+    meta: {
+      simple:
+        "Cheaper AI without worse answers",
+      technical:
+        "LLM routing + Python / cost and quality",
+    },
+    problem: {
+      simple:
+        "Using the biggest, priciest AI for every small task costs too much.",
+      technical:
+        "Sending every request to the largest model makes each task too expensive to price.",
+    },
+    bet: {
+      simple:
+        "Send easy questions to a smaller, cheaper AI and hard ones to the big one. Then use Red Pen's [[test|eval]] to make sure quality didn't drop.",
+      technical:
+        "Send easy requests to a small model, escalate hard ones, and score both with Red Pen's eval set.",
+    },
+    result: {
+      simple:
+        "Planned: the cost of each task before and after, and whether the answers got any worse.",
+      technical:
+        "Planned: cost per task before and after, and the quality difference in points.",
+    },
     plate: { artifact: { type: "cost" }, color: "sage" },
     tags: ["Routing", "Cost", "Evals", "Python"],
     order: 5,
@@ -209,43 +320,80 @@ export const projects: Project[] = [
   {
     slug: "activation-flow",
     title: "Activation flow",
-    oneLiner:
-      "An onboarding flow with full event tracking and an A/B test of where verification happens.",
+    oneLiner: {
+      simple:
+        "Tests two sign-up flows with real users ([[A/B test]]): ask people to verify first, or show them something useful first?",
+      technical:
+        "An onboarding flow with full event tracking and an A/B test of where verification happens.",
+    },
     customer: "Products losing new users before the first result",
     status: "next",
-    kind: "Onboarding + analytics",
+    kind: {
+      simple:
+        "Sign-up test",
+      technical:
+        "Onboarding + analytics",
+    },
     tags: ["Experiments", "Analytics"],
     order: 6,
   },
   {
     slug: "weekly-digest",
     title: "Weekly digest",
-    oneLiner:
-      "An agent that reads a metrics table every week and writes the \"what changed and why\" note.",
+    oneLiner: {
+      simple:
+        "An AI [[assistant|agent]] that reads a team's weekly numbers and writes a short note on what changed and why.",
+      technical:
+        "An agent that reads a metrics table every week and writes the \"what changed and why\" note.",
+    },
     customer: "Product teams with a weekly metrics review",
     status: "next",
-    kind: "Analytics agent",
+    kind: {
+      simple:
+        "Weekly numbers note",
+      technical:
+        "Analytics agent",
+    },
     tags: ["Agents", "Analytics"],
     order: 7,
   },
   {
     slug: "interview-synthesiser",
     title: "Interview synthesiser",
-    oneLiner:
-      "Turns raw interview notes into tagged themes ranked by frequency and impact.",
+    oneLiner: {
+      simple:
+        "Turns customer interview notes into a ranked list of what people said most, and what matters most.",
+      technical:
+        "Turns raw interview notes into tagged themes ranked by frequency and impact.",
+    },
     customer: "PMs running discovery",
     status: "next",
-    kind: "Research workflow",
+    kind: {
+      simple:
+        "Interview summaries",
+      technical:
+        "Research workflow",
+    },
     tags: ["Research"],
     order: 8,
   },
   {
     slug: "openapi-agent-toolkit",
     title: "OpenAPI → Agent Toolkit",
-    oneLiner: "Turns an OpenAPI spec into a set of tools an AI agent can call.",
+    oneLiner: {
+      simple:
+        "Lets an AI assistant use a company's existing software, without building each connection by hand.",
+      technical:
+        "Turns an OpenAPI spec into a set of tools an AI agent can call.",
+    },
     customer: "Teams that want agents to use their existing API",
     status: "next",
-    kind: "Agent tooling",
+    kind: {
+      simple:
+        "Connect AI to software",
+      technical:
+        "Agent tooling",
+    },
     tags: ["Agents", "MCP"],
     order: 9,
   },
