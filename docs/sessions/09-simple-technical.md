@@ -24,3 +24,4 @@
 - Glossary terms in use: AI agents (Focus), test/eval (Model router, About), A/B test (Activation flow), assistant/agent (Weekly digest).
 - Chart: values now sit inside the bars and the bars top out lower, so the tag never covers a number; the cropped "Products agent-ready" label is gone (the caption says it). The chart has a text alternative now.
 - Fixed along the way: `.tag span` and `.track span` also styled the new inner spans (tiny tag, double ticker padding); scoped to direct children. The case study's "Built with" row reads "What it is" in Simple.
+- Lighthouse after Part 2 (live): mobile home 93, about 96, log 99, post 92, case study 91; desktop 98–100 except /log 73 with CLS 0.503. Cause: before the web fonts load, the wider fallback font plus the new switch made the header wrap at ~1350px, then unwrap. Fix: below 1500px the switch hides its "Explain it:" prefix (the accessible name keeps it) and the header gap is 24px. Local desktop: /log 99, CLS 0.

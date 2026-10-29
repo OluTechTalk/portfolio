@@ -32,7 +32,7 @@
 /* top bar */
 .top {
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-  gap: 12px 32px; padding-top: 20px; padding-bottom: 20px;
+  gap: 12px 24px; padding-top: 20px; padding-bottom: 20px;
 }
 .top nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
 .top-right { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
@@ -66,6 +66,9 @@ main { transition: opacity 0.16s ease; }
 }
 .view-switch:hover { border-color: var(--accent-text); }
 .vs-label { color: var(--muted-text); }
+/* Keep the header on one line on laptops even in the fallback font, so it
+   doesn't wrap and then unwrap (layout shift) when the web fonts load. */
+@media (max-width: 1500px) and (min-width: 801px) { .vs-label { display: none; } }
 .vs-opt { color: var(--muted-text); }
 :root:not([data-view="technical"]) .vs-simple,
 :root[data-view="technical"] .vs-technical { color: inherit; font-weight: 500; }
